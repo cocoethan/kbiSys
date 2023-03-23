@@ -26,13 +26,20 @@ def openFile():
 
 def generate():
     print('Generation Started...')
+    attrStr = attrTxt.get('1.0', tk.END)
+    hardStr = hardTxt.get('1.0', tk.END)
+    penStr = penTxt.get('1.0', tk.END)
+    possStr = possTxt.get('1.0', tk.END)
+    quaStr = quaTxt.get('1.0', tk.END)
+
+    print(attrStr)
+    print(hardStr)
+    print(penStr)
+    print(possStr)
+    print(quaStr)
 
 def clear():
     print('Cancelled...')
-
-#Can Delete?
-def handleChecks():
-    print("Handle Checks called:", exisVal.get(), exemVal.get(), optiVal.get(), omniVal.get())
 
 def helpIndex():
     print("Help Index Selected")
