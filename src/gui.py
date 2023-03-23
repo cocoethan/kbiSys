@@ -9,6 +9,9 @@ from logic import existence, exemplify, optimize, omni
 # TO-DO
     # Work on openFile()
 
+#Notes
+    #Include numpy as a required library in documentation
+
 #Requirements Questions
     # can there be multiple comma/number values in single preference line
     # How much error checking do we need
