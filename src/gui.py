@@ -5,7 +5,7 @@ from tkinter import ttk
 
 # TO-DO
     # can there be multiple comma/number values in single preference line
-    # 
+    # How much error checking do we need 
 
 
 #Set-up Window
