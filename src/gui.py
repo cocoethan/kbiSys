@@ -3,10 +3,15 @@ from tkinter import filedialog
 from tkinter import scrolledtext
 from tkinter import ttk
 
-# TO-DO
-    # can there be multiple comma/number values in single preference line
-    # How much error checking do we need 
+from parse import parseInput
+from logic import existence, exemplify, optimize, omni
 
+# TO-DO
+    # Work on openFile()
+
+#Requirements Questions
+    # can there be multiple comma/number values in single preference line
+    # How much error checking do we need
 
 #Set-up Window
 window = tk.Tk()
@@ -24,83 +29,32 @@ exemVal = tk.IntVar()
 optiVal = tk.IntVar()
 omniVal = tk.IntVar()
 
-#Func for when buttons are pressed
+#Function for when Import File buttons are pressed
 def openFile():
     filename = filedialog.askopenfilename()
-    print('Selected:', filename)
+    #Do something
 
+#Function for when Generate button is pressed
 def generate():
-    print('Generation Started...')
-    attrStr = attrTxt.get('1.0', tk.END)
-    hardStr = hardTxt.get('1.0', tk.END)
-    penStr = penTxt.get('1.0', tk.END)
-    possStr = possTxt.get('1.0', tk.END)
-    quaStr = quaTxt.get('1.0', tk.END)
+    parseInput(attrTxt.get('1.0', tk.END), hardTxt.get('1.0', tk.END), penTxt.get('1.0', tk.END),
+               possTxt.get('1.0', tk.END), quaTxt.get('1.0', tk.END))
 
-    #print(attrStr)
-    #print(hardStr)
-    #print(penStr)
-    #print(possStr)
-    #print(quaStr)
+    existence()
+    exemplify()
+    optimize()
+    omni()
 
-    #print(hardStr, type(hardStr))
-
-    #attributes dict creation (key is left, items are right)
-    attrStr = attrStr.split('\n')
-    attrDict = {}
-    for strs in attrStr:
-        if strs:     # add error checking later
-            strs = strs.replace(" ", "")
-            strs = strs.split(':')
-            #print(strs)
-            strs[1] = strs[1].split(',')
-            attrDict[strs[0]] = strs[1]
-    print(attrDict)
-        # do binary encoding
-
-    #hard constraints dict creation
-    hardStr = hardStr.split('\n')
-    hardDict = {}
-    for key, strs in enumerate(hardStr):
-        if strs:
-            hardDict[key] = strs
-    print(hardDict)
-
-    #penalty dict creation (delim on commma)
-    penStr = penStr.split('\n')
-    penDict = {}
-    for key, strs in enumerate(penStr):
-        if strs:
-            strs = strs.split(",")     # add error checking later
-            strs[1] = strs[1].replace(" ", "")
-            penDict[key] = strs
-    print(penDict)
-
-    #possibilistic dict creation (delim on comma)
-    possStr = possStr.split('\n')
-    possDict = {}
-    for key, strs in enumerate(possStr):
-        if strs:
-            strs = strs.split(",")  # add error checking later
-            strs[1] = strs[1].replace(" ", "")
-            possDict[key] = strs
-    print(possDict)
-
-    #Qualitative choice logic dict creation
-    quaStr = quaStr.split('\n')
-    quaDict = {}
-    for key, strs in enumerate(quaStr):
-        if strs:     # add error checking later
-            quaDict[key] = strs
-    print(quaDict)
-
-
+#Clear all entry elements when Clear button is pressed
 def clear():
-    print('Cancelled...')
-
-#Can Delete?
-def handleChecks():
-    print("Handle Checks called:", exisVal.get(), exemVal.get(), optiVal.get(), omniVal.get())
+    attrTxt.delete('1.0', tk.END)
+    hardTxt.delete('1.0', tk.END)
+    penTxt.delete('1.0', tk.END)
+    possTxt.delete('1.0', tk.END)
+    quaTxt.delete('1.0', tk.END)
+    exisVal.set(0)
+    exemVal.set(0)
+    optiVal.set(0)
+    omniVal.set(0)
 
 def helpIndex():
     print("Help Index Selected")
@@ -118,7 +72,7 @@ prefLbl = tk.Label(window, text = "Preferences") #Preferences Label
 penLbl = tk.Label(window, text = "Penalty Logic:") #Penalty Logic Label
 possLbl = tk.Label(window, text = "Possibilistic Logic:") #Possibilistic Logic Label
 quaLbl = tk.Label(window, text = "Qualitative Choice Logic:") #Qualitative Choice Logic Label
-tasksLbl = tk.Label(window, text = "Reasoning Tasks:") #Reasoning Tasks Label
+tasksLbl = tk.Label(window, text = "Reasoning Task(s):") #Reasoning Tasks Label
 
 attrTxt = scrolledtext.ScrolledText(window, wrap = tk.WORD, width = 30, height = 3) #Attribute Textbox
 hardTxt = scrolledtext.ScrolledText(window, wrap = tk.WORD, width = 30, height = 3) #Hard Constraints Textbox
@@ -184,4 +138,5 @@ clrBtn.pack(side='right')
 
 menubar.add_cascade(label="Help", menu=helpMenu)
 window.config(menu=menubar)
+
 window.mainloop()
