@@ -78,7 +78,7 @@ def printOutput(output):
     newWindow.title("Results")
     #newWindow.geometry("200x200")
     outLabel = tk.Label(newWindow, text = output, justify= LEFT)
-    outLabel.pack(side = TOP, anchor='nw')
+    outLabel.pack(side = TOP, anchor='nw', padx=(0, 100))
     #print("OUTPUT:", output)
 
 #Clear all entry elements when Clear button is pressed
