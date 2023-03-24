@@ -1,20 +1,17 @@
 import tkinter as tk
-from tkinter import filedialog
+from tkinter import filedialog, LEFT, TOP
 from tkinter import scrolledtext
 from tkinter import ttk
 
-from parse import parseInput
+from parse import parseInput, parseOutput
 from logic import existence, exemplify, optimize, omni
 
 # TO-DO
     # Work on openFile()
+    # Error Checking?
 
 #Notes
     #Include numpy as a required library in documentation
-
-#Requirements Questions
-    # can there be multiple comma/number values in single preference line
-    # How much error checking do we need
 
 #Set-up Window
 window = tk.Tk()
@@ -33,19 +30,56 @@ optiVal = tk.IntVar()
 omniVal = tk.IntVar()
 
 #Function for when Import File buttons are pressed
-def openFile():
+def openFile(caller):
     filename = filedialog.askopenfilename()
-    #Do something
+    file = open(filename, "r")
+    linesarr = file.readlines()
+    tempstr = ""
+
+    for i, lines in enumerate(linesarr):
+        tempstr = tempstr + linesarr[i]
+
+    if(caller == 'attr'):
+        attrTxt.insert(tk.END, tempstr)
+    elif(caller == 'hard'):
+        hardTxt.insert(tk.END, tempstr)
+    elif (caller == 'pen'):
+        penTxt.insert(tk.END, tempstr)
+    elif (caller == 'poss'):
+        possTxt.insert(tk.END, tempstr)
+    elif (caller == 'qua'):
+        quaTxt.insert(tk.END, tempstr)
+
+    file.close()
 
 #Function for when Generate button is pressed
 def generate():
+    output = ""
+
     parseInput(attrTxt.get('1.0', tk.END), hardTxt.get('1.0', tk.END), penTxt.get('1.0', tk.END),
                possTxt.get('1.0', tk.END), quaTxt.get('1.0', tk.END))
 
-    existence()
-    exemplify()
-    optimize()
-    omni()
+    if(exisVal.get() == 1):
+        exisReturn = existence()
+        output = output + parseOutput('exis', exisReturn)
+        printOutput(output)
+    if(exemVal.get() == 1):
+        exemReturn = exemplify()
+        output = output + parseOutput('exem', exemReturn)
+    if(optiVal.get() == 1):
+        optiReturn = optimize()
+        output = output + parseOutput('opti', optiReturn)
+    if(omniVal.get() == 1):
+        omniReturn = omni()
+        output = output + parseOutput('omni', omniReturn)
+
+def printOutput(output):
+    newWindow = tk.Toplevel(window)
+    newWindow.title("Results")
+    #newWindow.geometry("200x200")
+    outLabel = tk.Label(newWindow, text = output, justify= LEFT)
+    outLabel.pack(side = TOP, anchor='nw')
+    #print("OUTPUT:", output)
 
 #Clear all entry elements when Clear button is pressed
 def clear():
@@ -83,11 +117,11 @@ penTxt = scrolledtext.ScrolledText(window, wrap = tk.WORD, width = 30, height = 
 possTxt = scrolledtext.ScrolledText(window, wrap = tk.WORD, width = 30, height = 3) #Possibilistic Logic Textbox
 quaTxt = scrolledtext.ScrolledText(window, wrap = tk.WORD, width = 30, height = 3) #Qualitative Choice Logic Textbox
 
-attrBtn = tk.Button(window, text = "Import File", command = openFile) #Attribute Button
-hardBtn = tk.Button(window, text = "Import File", command = openFile) #Hard Constraints Button
-penBtn = tk.Button(window, text = "Import File", command = openFile) #Penalty Logic Button
-possBtn = tk.Button(window, text = "Import File", command = openFile) #Possibilistic Logic Button
-quaBtn = tk.Button(window, text = "Import File", command = openFile) #Qualitative Choice Logic Button
+attrBtn = tk.Button(window, text = "Import File", command = lambda t = "attr": openFile(t)) #Attribute Button
+hardBtn = tk.Button(window, text = "Import File", command = lambda t = "hard": openFile(t)) #Hard Constraints Button
+penBtn = tk.Button(window, text = "Import File", command = lambda t = "pen": openFile(t)) #Penalty Logic Button
+possBtn = tk.Button(window, text = "Import File", command = lambda t = "poss": openFile(t)) #Possibilistic Logic Button
+quaBtn = tk.Button(window, text = "Import File", command = lambda t = "qua": openFile(t)) #Qualitative Choice Logic Button
 
 genBtn = tk.Button(frame_1, text = "Generate", command = generate)
 clrBtn = tk.Button(frame_1, text = "Clear", command = clear)
