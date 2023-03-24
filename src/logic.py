@@ -11,24 +11,30 @@ quaDict = {} #Dicitonary for qualitative choice logic
 
 def fillDicts(attrDictTemp, hardDictTemp, penDictTemp, possDictTemp, quaDictTemp):
     global attrDict
-    attrDict = attrDictTemp
     global hardDict
-    hardDict = hardDictTemp
     global penDict
-    penDict = penDictTemp
     global possDict
-    possDict = possDictTemp
     global quaDict
+    global objects
+    global attrValsDict
+    attrDict = attrDictTemp
+    hardDict = hardDictTemp
+    penDict = penDictTemp
+    possDict = possDictTemp
     quaDict = quaDictTemp
+    objects = {}
+    attrValsDict = {}
 
     for i, key in enumerate(attrDict):
         attrValsDict[i] = attrDict[key]
-    print(attrValsDict)
+    print("attrValsDict", attrValsDict)
 
     #return
     genObjects(i + 1)
 
 def genObjects(numOfAtts):
+    global objects
+    global attrValsDict
     loopcnt = (2 ** numOfAtts)
     for i in range(loopcnt):
         tempList = list(binary_repr(i, numOfAtts))#
@@ -45,7 +51,9 @@ def genObjects(numOfAtts):
     #return objects
 
 def existence():
-
+    global attrDict
+    global hardDict
+    global objects
     # get all constraints and remove all keywords (NOT fish becomes beef, remove OR, etc)
     # store each constraint line in its own item because of the AND conjunction
     feasible = {}
