@@ -96,17 +96,19 @@ def existence():
         succ = 0
 
     print(feasible)
+    return feasible
 
 def exemplify():
     print()
 
 def optimize():
-    preference()
+    penalty()
+    possibilistic()
 
 def omni():
     print()
 
-def preference():
+def penalty():
     global attrDict
     global penDict
     global objects
@@ -166,6 +168,72 @@ def preference():
                     break
         outDict[index] = str(penalty)
         penalty = 0
+        flag = 0
+    print(outDict)
+    #return outDict
+
+def possibilistic():
+    global attrDict
+    global possDict
+    global objects
+    global feasible
+
+    outDict = {}
+    possList = []
+    for index, consts in enumerate(possDict.values()):
+        # print(consts)
+        tempList = []
+        conjuncts = []
+        currPen = consts[0]
+        currPenVal = float(1 - float(consts[1]))
+        if 'AND' or 'OR' in currPen:
+            currPen = currPen.split("AND")
+            for i in range(len(currPen)):
+                currPen[i] = currPen[i].strip()
+                if 'OR' in currPen[i]:
+                    currPen[i] = currPen[i].split("OR")
+                    for j in range(len(currPen[i])):
+                        currWord = currPen[i][j].strip()
+                        if 'NOT' in currWord:
+                            currWord = notForPen(currWord)
+                        tempList.append(currWord)
+                    conjuncts.append(tempList)
+                else:
+                    currWord = currPen[i]
+                    if 'NOT' in currWord:
+                        currWord = notForPen(currWord)
+                    conjuncts.append(currWord)
+        possList.append([conjuncts, currPenVal])
+
+    possibilistic = 1
+    flag = 0
+
+    for index in feasible:
+        for values in possList:
+            # this is for OR
+            if any(isinstance(item, list) for item in values[0]):
+                for item in values[0]:
+                    if isinstance(item, list):
+                        for orVal in item:
+                            if orVal in feasible[index]:
+                                flag = 0
+                                break
+                            else:
+                                flag = 1
+            if flag == 1:
+                if values[1] < possibilistic:
+                    possibilistic = values[1]
+            # this is for AND
+            for condition in values[0]:
+                if isinstance(condition, list):
+                    continue
+                if condition not in feasible[index]:
+                    if values[1] < possibilistic:
+                        possibilistic = values[1]
+                    break
+        #print("possibilistic", round(possibilistic, 1))
+        outDict[index] = str(round(possibilistic, 1))
+        possibilistic = 1
         flag = 0
     print(outDict)
     #return outDict
