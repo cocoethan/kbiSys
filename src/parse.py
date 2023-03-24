@@ -1,12 +1,12 @@
 from logic import fillDicts
 
-attrDict = {} #Dicitionary for attributes and values
-hardDict = {} #Dictionary for hard constraints
-penDict = {} #Dicitonary for penalty logic
-possDict = {} #Dictionary for possibility logic
-quaDict = {} #Dicitonary for qualitative choice logic
-
 def parseInput(attrStr, hardStr, penStr, possStr, quaStr):
+    attrDict = {}  # Dicitionary for attributes and values
+    hardDict = {}  # Dictionary for hard constraints
+    penDict = {}  # Dicitonary for penalty logic
+    possDict = {}  # Dictionary for possibility logic
+    quaDict = {}  # Dicitonary for qualitative choice logic
+    
     # attributes dict creation (key is left, items are right)
     attrStr = attrStr.split('\n')
     for strs in attrStr:
