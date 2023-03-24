@@ -40,14 +40,19 @@ def openFile(caller):
         tempstr = tempstr + linesarr[i]
 
     if(caller == 'attr'):
+        attrTxt.delete('1.0', tk.END)
         attrTxt.insert(tk.END, tempstr)
     elif(caller == 'hard'):
+        hardTxt.delete('1.0', tk.END)
         hardTxt.insert(tk.END, tempstr)
     elif (caller == 'pen'):
+        penTxt.delete('1.0', tk.END)
         penTxt.insert(tk.END, tempstr)
     elif (caller == 'poss'):
+        possTxt.delete('1.0', tk.END)
         possTxt.insert(tk.END, tempstr)
     elif (caller == 'qua'):
+        quaTxt.delete('1.0', tk.END)
         quaTxt.insert(tk.END, tempstr)
 
     file.close()
