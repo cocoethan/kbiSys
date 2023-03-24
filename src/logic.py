@@ -2,6 +2,7 @@ from numpy import binary_repr
 
 objects = {}
 attrValsDict = {} #Dictionary for only attribute values
+feasible = {}
 
 attrDict = {} #Dicitionary for attributes and values
 hardDict = {} #Dictionary for hard constraints
@@ -17,6 +18,7 @@ def fillDicts(attrDictTemp, hardDictTemp, penDictTemp, possDictTemp, quaDictTemp
     global quaDict
     global objects
     global attrValsDict
+    global feasible
     attrDict = attrDictTemp
     hardDict = hardDictTemp
     penDict = penDictTemp
@@ -24,10 +26,11 @@ def fillDicts(attrDictTemp, hardDictTemp, penDictTemp, possDictTemp, quaDictTemp
     quaDict = quaDictTemp
     objects = {}
     attrValsDict = {}
+    feasible = {}
 
     for i, key in enumerate(attrDict):
         attrValsDict[i] = attrDict[key]
-    print("attrValsDict", attrValsDict)
+    #print("attrValsDict", attrValsDict)
 
     #return
     genObjects(i + 1)
@@ -54,9 +57,9 @@ def existence():
     global attrDict
     global hardDict
     global objects
+    global feasible
     # get all constraints and remove all keywords (NOT fish becomes beef, remove OR, etc)
     # store each constraint line in its own item because of the AND conjunction
-    feasible = {}
     conjunctDict = {}
     for index, consts in enumerate(hardDict.values()):
         constraints = []
@@ -98,7 +101,83 @@ def exemplify():
     print()
 
 def optimize():
-    print()
+    preference()
 
 def omni():
     print()
+
+def preference():
+    global attrDict
+    global penDict
+    global objects
+    global feasible
+
+    outDict = {}
+    penList = []
+    for index, consts in enumerate(penDict.values()):
+        # print(consts)
+        tempList = []
+        conjuncts = []
+        currPen = consts[0]
+        currPenVal = consts[1]
+        if 'AND' or 'OR' in currPen:
+            currPen = currPen.split("AND")
+            for i in range(len(currPen)):
+                currPen[i] = currPen[i].strip()
+                if 'OR' in currPen[i]:
+                    currPen[i] = currPen[i].split("OR")
+                    for j in range(len(currPen[i])):
+                        currWord = currPen[i][j].strip()
+                        if 'NOT' in currWord:
+                            currWord = notForPen(currWord)
+                        tempList.append(currWord)
+                    conjuncts.append(tempList)
+                else:
+                    currWord = currPen[i]
+                    if 'NOT' in currWord:
+                        currWord = notForPen(currWord)
+                    conjuncts.append(currWord)
+        penList.append([conjuncts, currPenVal])
+
+    penalty = 0
+    flag = 0
+
+    for index in feasible:
+        for values in penList:
+            # this is for OR
+            if any(isinstance(item, list) for item in values[0]):
+                for item in values[0]:
+                    if isinstance(item, list):
+                        for orVal in item:
+                            if orVal in feasible[index]:
+                                flag = 0
+                                break
+                            else:
+                                flag = 1
+            if flag == 1:
+                penalty += int(values[1])
+                break
+            # this is for AND
+            for condition in values[0]:
+                if isinstance(condition, list):
+                    continue
+                if condition not in feasible[index]:
+                    penalty += int(values[1])
+                    break
+        outDict[index] = str(penalty)
+        penalty = 0
+        flag = 0
+    print(outDict)
+    #return outDict
+
+def notForPen(currWord):
+    currWord = currWord.replace("NOT ", "")
+    for atts in attrDict.values():
+        if currWord == atts[0]:
+            currWord = atts[1]
+            break
+        elif currWord == atts[1]:
+            currWord = atts[0]
+            break
+
+    return currWord
