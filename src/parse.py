@@ -6,7 +6,7 @@ def parseInput(attrStr, hardStr, penStr, possStr, quaStr):
     penDict = {}  # Dicitonary for penalty logic
     possDict = {}  # Dictionary for possibility logic
     quaDict = {}  # Dicitonary for qualitative choice logic
-    
+
     # attributes dict creation (key is left, items are right)
     attrStr = attrStr.split('\n')
     for strs in attrStr:
@@ -52,3 +52,24 @@ def parseInput(attrStr, hardStr, penStr, possStr, quaStr):
     print(quaDict)
 
     fillDicts(attrDict, hardDict, penDict, possDict, quaDict)
+
+def parseOutput(type, data):
+    string = ""
+
+    if(type == 'exis'):
+        string = "Feasible:\n"
+        for i, key in enumerate(data):
+            print("HERE:", data[key])
+            tempArr = data[key]
+            string = string + str(key) + ":"
+            for j, vals in enumerate(tempArr):
+                string = string + " " + tempArr[j]
+            string = string + '\n'
+
+    if (type == 'exem'):
+        print()
+    if (type == 'opti'):
+        print()
+    if (type == 'omni'):
+        print()
+    return string
