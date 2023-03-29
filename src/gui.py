@@ -18,6 +18,7 @@ from logic import existence, exemplify, optimize, omni
 window = tk.Tk()
 window.title("kbiSys")
 window.geometry('565x505')
+window.resizable(False, False)
 
 frame_1 = tk.Frame(window)
 
