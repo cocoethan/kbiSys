@@ -111,18 +111,18 @@ def exemplify():
     possOutDict = possibilistic()
     quaOutDict = qualitative()
 
-    # throwing errors
-    #keys = random.sample(feasible.keys(), 2)
-    print(len(feasible))
     num1 = 0
     num2 = 0
     while num1 == num2:
-    	num1 = random.randint(0, (len(feasible)-1))
-    	num2 = random.randint(0, (len(feasible)-1))
-    print(num1, num2)
-    # make these random
-    obj1 = "o7"
-    obj2 = "o5"
+        num1 = random.randint(0, (len(feasible)-1))
+        num2 = random.randint(0, (len(feasible)-1))
+
+    #print(num1, num2)
+
+    tempList = list(feasible.items())  # convert the view object to a list
+    obj1 = tempList[num1][0]
+    obj2 = tempList[num2][0]
+    #print(obj1, obj2)
     
     # 0 for obj1 is preferred 1 for obj2 is preferred, -1 for tie
     penPref = 0
@@ -138,45 +138,45 @@ def exemplify():
     
     #checking for penalty preference
     if obj1Pen > obj2Pen:
-    	penPref = 1
+        penPref = 1
     elif obj1Pen == obj2Pen:
-    	penPref = -1
+        penPref = -1
     
     # checking for poss preference
     if obj1Poss < obj2Poss:
-    	possPref = 1
+        possPref = 1
     elif obj1Poss == obj2Poss:
-    	possPref = -1
+        possPref = -1
     
     #checking for choice preference
     if obj1Qua > obj2Qua:
-    	quaPref = 1
+        quaPref = 1
     elif obj1Qua == obj2Qua:
-    	quaPref = -1
+        quaPref = -1
     
-    print(penPref, possPref, quaPref)
+    #print(penPref, possPref, quaPref)
     
     #equivalent: equal in all
     if penPref == -1 and possPref == -1 and quaPref == -1:
-    	print("Object", obj1, "and", obj2, "are equivalent")
-    	return
+        print("Object", obj1, "and", obj2, "are equivalent")
+        return
     
     #strictly preferred: better in all conditions
     if penPref == 1 and possPref == 1 and quaPref == 1:
-    	print("Object", obj2, "is strictly preferred over", obj1)
-    	return
+        print("Object", obj2, "is strictly preferred over", obj1)
+        return
     
     if penPref == 0 and possPref == 0 and quaPref == 0:
-    	print("Object", obj1, "is strictly preferred over", obj2)
-    	return
+        print("Object", obj1, "is strictly preferred over", obj2)
+        return
     
     #weakly preferred: better in 1 condition & as good as in all other
     if (penPref == 0 and possPref == -1 and quaPref == -1) or (penPref == -1 and possPref == 0 and quaPref == -1) or (penPref == -1 and possPref == -1 and quaPref == 0):
-    	print("Object", obj1, "is weakly preferred over", obj2)
-    	return
+        print("Object", obj1, "is weakly preferred over", obj2)
+        return
     if (penPref == 1 and possPref == -1 and quaPref == -1) or (penPref == -1 and possPref == 1 and quaPref == -1) or (penPref == -1 and possPref == -1 and quaPref == 1):
-    	print("Object", obj2, "is weakly preferred over", obj1)
-    	return
+        print("Object", obj2, "is weakly preferred over", obj1)
+        return
     
     #incomp: catchall
     print("Objects", obj1, "and", obj2, "are incomparable")
@@ -258,11 +258,11 @@ def omni():
             minQuaKey.append(i)
 
     print("OMNI Penalty key:")
-    print(minPenKey)
+    print(*minPenKey)
     print("OMNI Possibility key:")
-    print(maxPossKey)
+    print(*maxPossKey)
     print("OMNI Qualitative Choice:")
-    print(minQuaKey)
+    print(*minQuaKey)
 
 def penalty():
     global attrDict
@@ -325,7 +325,9 @@ def penalty():
         outDict[index] = str(penalty)
         penalty = 0
         flag = 0
-    #print(outDict)
+
+    # FOR ETHAN PRINT THIS DICTIONARY
+    print(outDict)
     return outDict
 
 def possibilistic():
@@ -391,7 +393,9 @@ def possibilistic():
         outDict[index] = str(round(possibilistic, 1))
         possibilistic = 1
         flag = 0
-    #print(outDict)
+
+    # FOR ETHAN PRINT THIS DICTIONARY
+    print(outDict)
     return outDict
 
 def qualitative():
@@ -521,7 +525,8 @@ def qualitative():
     for id, index in enumerate(feasible):
         quaValsDict[index] = quaList[id]
 
-    #print(finalVals, quaValsDict)
+    #FOR ETHAN so this is a list with all table vals, could print this for qual or to keep uniform could print quaValsDict
+    print(finalVals)
     return quaValsDict
 
 def notForPen(currWord):
