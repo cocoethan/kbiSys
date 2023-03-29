@@ -152,36 +152,13 @@ def optimize():
     for i in quaOutDict:
         if quaOutDict[i] == minQua:
             minQuaKey.append(i)
-    iter = []
-    lenList = [len(minPenKey), len(maxPossKey), len(minQuaKey)]
-    index = lenList.index(max(lenList))
-    if index == 0:
-        iter = minPenKey
-    elif index == 1:
-        iter = maxPossKey
-    else:
-        iter = minQuaKey
-
-    optimal = ""
-    for item in iter:
-        if item in minPenKey and item in maxPossKey and item in minQuaKey:
-            optimal = item
-            break
-    if len(optimal) == 0:
-        print("No optimal object for all logics, returning first")
-        print("Optimal Penalty key:")
-        print(minPenKey[0])
-        print("Optimal Possibility key:")
-        print(maxPossKey[0])
-        print("Optimal Qualitative Choice:")
-        print(minQuaKey)
-    else:
-        print("Optimal Penalty key:")
-        print(optimal)
-        print("Optimal Possibility key:")
-        print(optimal)
-        print("Optimal Qualitative Choice:")
-        print(optimal)
+    
+    print("Optimal Penalty key:")
+    print(minPenKey[0])
+    print("Optimal Possibility key:")
+    print(maxPossKey[0])
+    print("Optimal Qualitative Choice:")
+    print(minQuaKey[0])
 
 # this should call penalty, possibilistic, qualitative, find all optimal values (if there is a tie, return those
 def omni():
