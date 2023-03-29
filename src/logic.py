@@ -98,14 +98,18 @@ def existence():
     print(feasible)
     return feasible
 
+# pick 2 rand feas and show preference (no clue wtf strict equivalent or incomp means)
 def exemplify():
     print()
 
+# this should call penalty, possibilistic, qualitative, find one optimal value (if there is a tie, just pick one,
+# and return the object, penalty, and choice
 def optimize():
     penalty()
     possibilistic()
     qualitative()
 
+# this should call penalty, possibilistic, qualitative, find all optimal values (if there is a tie, return those
 def omni():
     print()
 
@@ -321,8 +325,9 @@ def qualitative():
                         i.append(j)
                 else:
                     i.append(quals)
-
+    print(quaList)
     flag = 0
+    num = 0
     for id, feas in enumerate(feasible.values()):
         for elem in quaList:
             for index, pref in enumerate(elem):
@@ -365,7 +370,7 @@ def qualitative():
     for id, index in enumerate(feasible):
         quaValsDict[index] = quaList[id]
 
-    print(quaValsDict)
+    print(finalVals, quaValsDict)
 
 def notForPen(currWord):
     currWord = currWord.replace("NOT ", "")
