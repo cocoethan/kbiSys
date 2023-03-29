@@ -1,5 +1,5 @@
 from numpy import binary_repr
-#i love
+
 objects = {}
 attrValsDict = {} #Dictionary for only attribute values
 feasible = {}
