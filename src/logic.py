@@ -113,11 +113,74 @@ def exemplify():
 
     # throwing errors
     #keys = random.sample(feasible.keys(), 2)
-
-
-
-    #print(keys)
-
+    print(len(feasible))
+    num1 = 0
+    num2 = 0
+    while num1 == num2:
+    	num1 = random.randint(0, (len(feasible)-1))
+    	num2 = random.randint(0, (len(feasible)-1))
+    print(num1, num2)
+    # make these random
+    obj1 = "o7"
+    obj2 = "o5"
+    
+    # 0 for obj1 is preferred 1 for obj2 is preferred, -1 for tie
+    penPref = 0
+    possPref = 0
+    quaPref = 0
+    
+    obj1Pen = penOutDict[obj1]
+    obj2Pen = penOutDict[obj2]
+    obj1Poss = possOutDict[obj1]
+    obj2Poss = possOutDict[obj2]
+    obj1Qua = quaOutDict[obj1]
+    obj2Qua = quaOutDict[obj2]
+    
+    #checking for penalty preference
+    if obj1Pen > obj2Pen:
+    	penPref = 1
+    elif obj1Pen == obj2Pen:
+    	penPref = -1
+    
+    # checking for poss preference
+    if obj1Poss < obj2Poss:
+    	possPref = 1
+    elif obj1Poss == obj2Poss:
+    	possPref = -1
+    
+    #checking for choice preference
+    if obj1Qua > obj2Qua:
+    	quaPref = 1
+    elif obj1Qua == obj2Qua:
+    	quaPref = -1
+    
+    print(penPref, possPref, quaPref)
+    
+    #equivalent: equal in all
+    if penPref == -1 and possPref == -1 and quaPref == -1:
+    	print("Object", obj1, "and", obj2, "are equivalent")
+    	return
+    
+    #strictly preferred: better in all conditions
+    if penPref == 1 and possPref == 1 and quaPref == 1:
+    	print("Object", obj2, "is strictly preferred over", obj1)
+    	return
+    
+    if penPref == 0 and possPref == 0 and quaPref == 0:
+    	print("Object", obj1, "is strictly preferred over", obj2)
+    	return
+    
+    #weakly preferred: better in 1 condition & as good as in all other
+    if (penPref == 0 and possPref == -1 and quaPref == -1) or (penPref == -1 and possPref == 0 and quaPref == -1) or (penPref == -1 and possPref == -1 and quaPref == 0):
+    	print("Object", obj1, "is weakly preferred over", obj2)
+    	return
+    if (penPref == 1 and possPref == -1 and quaPref == -1) or (penPref == -1 and possPref == 1 and quaPref == -1) or (penPref == -1 and possPref == -1 and quaPref == 1):
+    	print("Object", obj2, "is weakly preferred over", obj1)
+    	return
+    
+    #incomp: catchall
+    print("Objects", obj1, "and", obj2, "are incomparable")
+    
 # this should call penalty, possibilistic, qualitative, find one optimal value (if there is a tie, just pick one,
 # and return the object, penalty, and choice
 def optimize():
@@ -137,7 +200,7 @@ def optimize():
         if penOutDict[i] == minPen:
             minPenKey.append(i)
 
-    # this is getting the maximum possibilistic keys (i dont know if this is correct)
+    # this is getting the maximum possibilistic keys (correct)
     maxPoss = max(possOutDict.values())
     maxPossKey = []
 
