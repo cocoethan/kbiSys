@@ -66,8 +66,11 @@ def generate():
     parseInput(attrTxt.get('1.0', tk.END), hardTxt.get('1.0', tk.END), penTxt.get('1.0', tk.END),
                possTxt.get('1.0', tk.END), quaTxt.get('1.0', tk.END))
 
+    exisReturn = existence()
+    #output = output + parseOutput('exis', exisReturn)
+    #printOutput(output)
     if(exisVal.get() == 1):
-        exisReturn = existence()
+    #    exisReturn = existence()
         output = output + parseOutput('exis', exisReturn)
         printOutput(output)
     if(exemVal.get() == 1):
