@@ -104,6 +104,7 @@ def exemplify():
 def optimize():
     penalty()
     possibilistic()
+    qualitative()
 
 def omni():
     print()
@@ -122,7 +123,7 @@ def penalty():
         conjuncts = []
         currPen = consts[0]
         currPenVal = consts[1]
-        if 'AND' or 'OR' in currPen:
+        if 'AND' in currPen or 'OR' in currPen:
             currPen = currPen.split("AND")
             for i in range(len(currPen)):
                 currPen[i] = currPen[i].strip()
@@ -186,7 +187,7 @@ def possibilistic():
         conjuncts = []
         currPen = consts[0]
         currPenVal = float(1 - float(consts[1]))
-        if 'AND' or 'OR' in currPen:
+        if 'AND' in currPen or 'OR' in currPen:
             currPen = currPen.split("AND")
             for i in range(len(currPen)):
                 currPen[i] = currPen[i].strip()
@@ -237,6 +238,134 @@ def possibilistic():
         flag = 0
     print(outDict)
     #return outDict
+
+def qualitative():
+    global quaDict
+    global feasible
+
+    anotherTempList = []
+    tempList = []
+    quaRules = []
+    quaList = []
+    quaVals = []
+    finalVals = []
+    orflag = 0
+    num = 0
+    flag = 0
+    for quals in quaDict.values():
+        if 'BT' in quals:
+            quaRules = []
+            quals = quals.split('BT')
+            # for each split on BT
+            for num, part in enumerate(quals):
+                tempList = []
+                anotherTempList = []
+                num += 1
+                part = part.strip()
+                if 'IF' in part:
+                    part = part.split('IF')[0].strip()
+                if 'NOT' in part:
+                    part = notForPen(part)
+                    part = part.strip()
+                if 'AND' in part or 'OR' in part:
+                    part = part.split("AND")
+                    for i in range(len(part)):
+                        part[i] = part[i].strip()
+                        if 'OR' in part[i]:
+                            part[i] = part[i].split("OR")
+                            for j in range(len(part[i])):
+                                currWord = part[i][j].strip()
+                                anotherTempList.append(currWord)
+                            tempList.append(anotherTempList)
+                        else:
+                            currWord = part[i]
+                            tempList.append(part[i])
+
+                    quaRules.append(tempList)
+                else:
+                    quaRules.append([part])
+            quaList.append(quaRules)
+        else:
+            if 'IF' in quals:
+                quals = quals.split('IF')[0].strip()
+            quaList.append([[quals]])
+
+    tempList = []
+    anotherTempList = []
+
+    for id, quals in enumerate(quaDict.values()):
+
+        if quals[-2:] != 'IF':
+            quals = quals.split('IF')[1].strip()
+            # need to add a check to see if AND or OR are on RHS
+            if 'AND' in quals or 'OR' in quals:
+                tempList = []
+                anotherTempList = []
+                quals = quals.split("AND")
+                for i in range(len(quals)):
+                    quals[i] = quals[i].strip()
+                    if 'OR' in quals[i]:
+                        quals[i] = quals[i].split("OR")
+                        for j in range(len(quals[i])):
+                            currWord = quals[i][j].strip()
+                            anotherTempList.append(currWord)
+                        tempList.append(anotherTempList)
+                    else:
+                        currWord = quals[i]
+                        tempList.append(quals[i])
+                quals = tempList
+                #quaRules.append(tempList)
+            for i in quaList[id]:
+                if isinstance(quals, list):
+                    for j in quals:
+                        i.append(j)
+                else:
+                    i.append(quals)
+
+    flag = 0
+    for id, feas in enumerate(feasible.values()):
+        for elem in quaList:
+            for index, pref in enumerate(elem):
+                for elements in pref:
+                    if isinstance(elements, list):
+                        if orflag != 1:
+                            for orvalues in elements:
+                                if orvalues in feas:
+                                    orflag = 1
+                                    break
+                            if orflag != 1:
+                                flag = 1
+                                break
+                    else:
+                        if elements not in feas:
+                            flag = 1
+                            break
+                if flag == 0:
+                    num = index+1
+                    break
+                orflag = 0
+                flag = 0
+            quaVals.append(num)
+            flag = 0
+            orflag = 0
+            num = 0
+        finalVals.append(quaVals)
+        quaVals = []
+
+    sum = 0
+    quaValsDict = {}
+    quaList = []
+    for tot in finalVals:
+        for num in tot:
+            sum += num
+            #print(sum)
+        quaList.append(sum)
+        sum = 0
+
+    for id, index in enumerate(feasible):
+        quaValsDict[index] = quaList[id]
+
+    print(quaValsDict)
 
 def notForPen(currWord):
     currWord = currWord.replace("NOT ", "")
