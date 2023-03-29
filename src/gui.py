@@ -12,6 +12,7 @@ from logic import existence, exemplify, optimize, omni
 
 #Notes
     #Include numpy as a required library in documentation
+    #Including random library in logic file for exemplification
 
 #Set-up Window
 window = tk.Tk()
