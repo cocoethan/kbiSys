@@ -1,3 +1,4 @@
+import random
 from numpy import binary_repr
 
 objects = {}
@@ -100,14 +101,59 @@ def existence():
 
 # pick 2 rand feas and show preference (no clue wtf strict equivalent or incomp means)
 def exemplify():
-    print()
+    # so the thing ab this is we dont need to be calling these fnctns again, but because all options can
+    # be done independently im just going to do it like this for now. can always change if we feel like optimizing
+    penOutDict = {}
+    possOutDict = {}
+    quaOutDict = {}
+
+    penOutDict = penalty()
+    possOutDict = possibilistic()
+    quaOutDict = qualitative()
+
+    # throwing errors
+    #keys = random.sample(feasible.keys(), 2)
+
+    #print(keys)
 
 # this should call penalty, possibilistic, qualitative, find one optimal value (if there is a tie, just pick one,
 # and return the object, penalty, and choice
 def optimize():
-    penalty()
-    possibilistic()
-    qualitative()
+    penOutDict = {}
+    possOutDict = {}
+    quaOutDict = {}
+
+    penOutDict = penalty()
+    possOutDict = possibilistic()
+    quaOutDict = qualitative()
+
+    # this is getting the minimum penalty key(s) (correct)
+    minPen = min(penOutDict.values())
+    minPenKey = []
+
+    for i in penOutDict:
+        if penOutDict[i] == minPen:
+            minPenKey.append(i)
+
+    # this is getting the maximum possibilistic keys (i dont know if this is correct)
+    maxPoss = max(possOutDict.values())
+    maxPossKey = []
+
+    for i in possOutDict:
+        if possOutDict[i] == maxPoss:
+            maxPossKey.append(i)
+
+    # this is getting the minimum qualitative choice keys (i think this is correct??????)
+    minQua = min(quaOutDict.values())
+    minQuaKey = []
+
+    for i in quaOutDict:
+        if quaOutDict[i] == minQua:
+            minQuaKey.append(i)
+
+    print(minPenKey)
+    print(maxPossKey)
+    print(minQuaKey)
 
 # this should call penalty, possibilistic, qualitative, find all optimal values (if there is a tie, return those
 def omni():
@@ -175,7 +221,7 @@ def penalty():
         penalty = 0
         flag = 0
     print(outDict)
-    #return outDict
+    return outDict
 
 def possibilistic():
     global attrDict
@@ -241,7 +287,7 @@ def possibilistic():
         possibilistic = 1
         flag = 0
     print(outDict)
-    #return outDict
+    return outDict
 
 def qualitative():
     global quaDict
@@ -371,6 +417,7 @@ def qualitative():
         quaValsDict[index] = quaList[id]
 
     print(finalVals, quaValsDict)
+    return quaValsDict
 
 def notForPen(currWord):
     currWord = currWord.replace("NOT ", "")
