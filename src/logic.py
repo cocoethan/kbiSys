@@ -202,6 +202,8 @@ def optimize():
     possOutDict = possibilistic()
     quaOutDict = qualitative()
 
+    print(penOutDict, possOutDict, quaOutDict)
+
     # this is getting the minimum penalty key(s) (correct)
     minPen = min(penOutDict.values())
     minPenKey = []
@@ -227,12 +229,13 @@ def optimize():
             minQuaKey.append(i)
 
     print("Optimal Penalty key:")
-    print(minPenKey[0])
+    print(minPenKey[0], "with", penOutDict[minPenKey[0]], "penalty")
     print("Optimal Possibility key:")
-    print(maxPossKey[0])
+    print(maxPossKey[0], "with", possOutDict[maxPossKey[0]], "tolerance")
     print("Optimal Qualitative Choice:")
     print(minQuaKey[0])
 
+    return [[minPenKey[0], penOutDict[minPenKey[0]]], [maxPossKey[0], possOutDict[maxPossKey[0]]], [minQuaKey[0]]]
 
 # this should call penalty, possibilistic, qualitative, find all optimal values (if there is a tie, return those
 def omni():
@@ -275,6 +278,27 @@ def omni():
     print("OMNI Qualitative Choice:")
     print(*minQuaKey)
 
+    penOut = []
+    possOut = []
+    quaOut = []
+
+    for keyVal in minPenKey:
+        penOut.append(keyVal)
+        penOut.append(penOutDict[keyVal])
+        #print("For omni PEN", penOutDict[keyVal])
+
+    for keyVal in maxPossKey:
+        possOut.append(keyVal)
+        possOut.append(possOutDict[keyVal])
+        #print("For omni POSS", possOutDict[keyVal])
+
+    for keyVal in minQuaKey:
+        quaOut.append(keyVal)
+        #quaOut.append(quaOutDict[keyVal])
+        #print("For omni QUA", quaOutDict[keyVal])
+
+    #print(penOut, possOut, quaOut)
+    return [penOut, possOut, quaOut]
 
 def penalty():
     global attrDict
@@ -339,7 +363,7 @@ def penalty():
         flag = 0
 
     # FOR ETHAN PRINT THIS DICTIONARY
-    print(outDict)
+    #print(outDict)
     return outDict
 
 
@@ -408,7 +432,7 @@ def possibilistic():
         flag = 0
 
     # FOR ETHAN PRINT THIS DICTIONARY
-    print(outDict)
+    #print(outDict)
     return outDict
 
 
@@ -540,7 +564,7 @@ def qualitative():
         quaValsDict[index] = quaList[id]
 
     # FOR ETHAN so this is a list with all table vals, could print this for qual or to keep uniform could print quaValsDict
-    print(finalVals)
+    #print(finalVals)
     return quaValsDict
 
 
