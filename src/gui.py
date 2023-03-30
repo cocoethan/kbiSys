@@ -27,30 +27,33 @@ omniVal = tk.IntVar()
 #Function for when Import File buttons are pressed
 def openFile(caller):
     filename = filedialog.askopenfilename()
-    file = open(filename, "r")
-    linesarr = file.readlines()
-    tempstr = ""
+    if(filename.lower().endswith('.txt') == False):
+        messagebox.showinfo("Error","File type not supported, please use a '.txt' file type.")
+    else:
+        file = open(filename, "r")
+        linesarr = file.readlines()
+        tempstr = ""
 
-    for i, lines in enumerate(linesarr):
-        tempstr = tempstr + linesarr[i]
+        for i, lines in enumerate(linesarr):
+            tempstr = tempstr + linesarr[i]
 
-    if(caller == 'attr'):
-        attrTxt.delete('1.0', tk.END)
-        attrTxt.insert(tk.END, tempstr)
-    elif(caller == 'hard'):
-        hardTxt.delete('1.0', tk.END)
-        hardTxt.insert(tk.END, tempstr)
-    elif (caller == 'pen'):
-        penTxt.delete('1.0', tk.END)
-        penTxt.insert(tk.END, tempstr)
-    elif (caller == 'poss'):
-        possTxt.delete('1.0', tk.END)
-        possTxt.insert(tk.END, tempstr)
-    elif (caller == 'qua'):
-        quaTxt.delete('1.0', tk.END)
-        quaTxt.insert(tk.END, tempstr)
+        if(caller == 'attr'):
+            attrTxt.delete('1.0', tk.END)
+            attrTxt.insert(tk.END, tempstr)
+        elif(caller == 'hard'):
+            hardTxt.delete('1.0', tk.END)
+            hardTxt.insert(tk.END, tempstr)
+        elif (caller == 'pen'):
+            penTxt.delete('1.0', tk.END)
+            penTxt.insert(tk.END, tempstr)
+        elif (caller == 'poss'):
+            possTxt.delete('1.0', tk.END)
+            possTxt.insert(tk.END, tempstr)
+        elif (caller == 'qua'):
+            quaTxt.delete('1.0', tk.END)
+            quaTxt.insert(tk.END, tempstr)
 
-    file.close()
+        file.close()
 
 #Function for when Generate button is pressed
 def generate():
@@ -73,7 +76,6 @@ def generate():
             exisReturn = existence()
             if (exisVal.get() == 1):
                 output = output + parseOutput('exis', exisReturn)
-                printOutput(output)
             if(exemVal.get() == 1):
                 exemReturn = exemplify()
                 output = output + parseOutput('exem', exemReturn)
@@ -166,10 +168,6 @@ def about():
     outAboutLabel = tk.Label(newAboutWindow, text=about, justify=LEFT)
     outAboutLabel.pack(side=TOP, anchor='nw', padx=(0,50))
 
-def howToUse():
-    print()
-
-helpMenu.add_command(label="How to Use", command=howToUse)
 helpMenu.add_command(label="Help Index", command=helpIndex)
 helpMenu.add_command(label="About...", command=about)
 
