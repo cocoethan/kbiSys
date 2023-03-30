@@ -6,14 +6,6 @@ from tkinter import ttk
 from parse import parseInput, parseOutput
 from logic import existence, exemplify, optimize, omni
 
-# TO-DO
-    # Work on openFile()
-    # Error Checking?
-
-#Notes
-    #Include numpy as a required library in documentation
-    #Including random library in logic file for exemplification
-
 #Set-up Window
 window = tk.Tk()
 window.title("kbiSys")
@@ -67,10 +59,7 @@ def generate():
                possTxt.get('1.0', tk.END), quaTxt.get('1.0', tk.END))
 
     exisReturn = existence()
-    #output = output + parseOutput('exis', exisReturn)
-    #printOutput(output)
-    if(exisVal.get() == 1):
-    #    exisReturn = existence()
+    if (exisVal.get() == 1):
         output = output + parseOutput('exis', exisReturn)
         printOutput(output)
     if(exemVal.get() == 1):
@@ -86,6 +75,7 @@ def generate():
 def printOutput(output):
     newWindow = tk.Toplevel(window)
     newWindow.title("Results")
+    newWindow.resizable(False, False)
     #newWindow.geometry("200x200")
     outLabel = tk.Label(newWindow, text = output, justify= LEFT)
     outLabel.pack(side = TOP, anchor='nw', padx=(0, 100))
@@ -104,11 +94,68 @@ def clear():
     omniVal.set(0)
 
 def helpIndex():
-    print("Help Index Selected")
+    help = '''
+            Note:
+            'kbiSys' stands for: Knowledge-Based Intelligent System, therefore a basic understand of Knowledge-Based
+            Intelligent Systems is recommended. Intended usage is for Introduction to Artificial Intelligence students 
+            at the University of North Florida or other universities.\n
+            Help:
+            Issue: "Generate button is returning an error or not generating output."
+            If 'Generate' button is returning an error or not generating output, please verify all sections are filled 
+            out and input is formatted using Conjunctional Normal Form (CNF). A working example using CNF is provided 
+            below.
+                Example:
+                    Attributes:                 dissert: cake, ice-cream
+                                                       drink: wine, beer
+                                                       main: fish, beef
+                    Hard Constraints:    NOT wine OR NOT ice-cream
+                    Penalty Logic:          fish AND wine, 10
+                                                       wine OR cake, 6
+                    Possibilistic Logic:   fish AND wine, 0.9
+                                                       wine OR cake, 0.6
+                    Qualitative Logic:    fish BT beef IF
+                                                       ice-cream BT cake IF
+                                                       wine BT beer IF fish
+                                                       beer BT wine IF beef
+            Additionally, check that a Reasoning Task is selected.\n
+            Issue: "I do not understand the Reasoning Tasks and their functionality."
+            The Reasoning Tasks work as follows:
+                Existence of feasible objects: decide whether there are feasible objects w.r.t H, 
+                that is, whether there are models of H that are truth assignments making H true.
+                Exemplification: generate, if possible, two random feasible objects, and show the 
+                preference between the two (strict preference, equivalence, or incomparison) w.r.t T.
+                Optimization: find one optimal object w.r.t T.
+                Omni-optimization: find all optimal objects w.r.t T.\n
+            To submit a potential issue, please submit a New Issue through the GitHub repository.
+           '''
+
+    newHelpWindow = tk.Toplevel(window)
+    newHelpWindow.title("Help")
+    newHelpWindow.resizable(False, False)
+    # newWindow.geometry("200x200")
+    outHelpLabel = tk.Label(newHelpWindow, text = help, justify=LEFT)
+    outHelpLabel.pack(side=TOP, anchor='nw', padx=(0, 50))
 
 def about():
-    print("About Selected")
+    about = '''
+            Developed by Maxwell Twardowski and Ethan Coco.\n
+            Developed for the Introduction to Artificial Intelligence course at the University of North Florida.\n
+            Application name 'kbiSys' stands for: Knowledge-Based Intelligent System.
+            Our model collects user preferences (Attributes, Hard Constraints, and Preferences), and reasons about 
+            them using Reasoning Tasks.
+            '''
 
+    newAboutWindow = tk.Toplevel(window)
+    newAboutWindow.title("About")
+    newAboutWindow.resizable(False, False)
+    # newWindow.geometry("200x200")
+    outAboutLabel = tk.Label(newAboutWindow, text=about, justify=LEFT)
+    outAboutLabel.pack(side=TOP, anchor='nw', padx=(0,50))
+
+def howToUse():
+    print()
+
+helpMenu.add_command(label="How to Use", command=howToUse)
 helpMenu.add_command(label="Help Index", command=helpIndex)
 helpMenu.add_command(label="About...", command=about)
 
