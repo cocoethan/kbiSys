@@ -54,13 +54,14 @@ def openFile(caller):
 
 #Function for when Generate button is pressed
 def generate():
+    nullCheck = int(exisVal.get()) + int(exemVal.get()) + int(optiVal.get()) + int(omniVal.get())
     if (
         attrTxt.compare("end-1c", "==", "1.0") or hardTxt.compare("end-1c", "==", "1.0")
         or penTxt.compare("end-1c", "==", "1.0") or possTxt.compare("end-1c", "==", "1.0")
         or quaTxt.compare("end-1c", "==", "1.0")
     ):
         messagebox.showinfo("Error", "One or more entry boxes are empty or null, please try again.")
-    elif(exisVal.get() == 0 and exisVal.get() == 0 and exisVal.get() == 0 and exisVal.get() == 0):
+    elif(nullCheck == 0):
         messagebox.showinfo("Error", "No Reasoning Task(s) selected, please select at least one option.")
     else:
         output = ""
@@ -82,6 +83,7 @@ def generate():
             if(omniVal.get() == 1):
                 omniReturn = omni()
                 output = output + parseOutput('omni', omniReturn)
+            printOutput(output)
         except:
             messagebox.showinfo("Error", "Syntax error(s), please check input and try again.")
 def printOutput(output):
