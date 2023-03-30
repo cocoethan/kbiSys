@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import filedialog, LEFT, TOP
 from tkinter import scrolledtext
 from tkinter import ttk
+from tkinter import messagebox
 
 from parse import parseInput, parseOutput
 from logic import existence, exemplify, optimize, omni
@@ -53,25 +54,36 @@ def openFile(caller):
 
 #Function for when Generate button is pressed
 def generate():
-    output = ""
+    if (
+        attrTxt.compare("end-1c", "==", "1.0") or hardTxt.compare("end-1c", "==", "1.0")
+        or penTxt.compare("end-1c", "==", "1.0") or possTxt.compare("end-1c", "==", "1.0")
+        or quaTxt.compare("end-1c", "==", "1.0")
+    ):
+        messagebox.showinfo("Error", "One or more entry boxes are empty or null, please try again.")
+    elif(exisVal.get() == 0 and exisVal.get() == 0 and exisVal.get() == 0 and exisVal.get() == 0):
+        messagebox.showinfo("Error", "No Reasoning Task(s) selected, please select at least one option.")
+    else:
+        output = ""
 
-    parseInput(attrTxt.get('1.0', tk.END), hardTxt.get('1.0', tk.END), penTxt.get('1.0', tk.END),
+        try:
+            parseInput(attrTxt.get('1.0', tk.END), hardTxt.get('1.0', tk.END), penTxt.get('1.0', tk.END),
                possTxt.get('1.0', tk.END), quaTxt.get('1.0', tk.END))
 
-    exisReturn = existence()
-    if (exisVal.get() == 1):
-        output = output + parseOutput('exis', exisReturn)
-        printOutput(output)
-    if(exemVal.get() == 1):
-        exemReturn = exemplify()
-        output = output + parseOutput('exem', exemReturn)
-    if(optiVal.get() == 1):
-        optiReturn = optimize()
-        output = output + parseOutput('opti', optiReturn)
-    if(omniVal.get() == 1):
-        omniReturn = omni()
-        output = output + parseOutput('omni', omniReturn)
-
+            exisReturn = existence()
+            if (exisVal.get() == 1):
+                output = output + parseOutput('exis', exisReturn)
+                printOutput(output)
+            if(exemVal.get() == 1):
+                exemReturn = exemplify()
+                output = output + parseOutput('exem', exemReturn)
+            if(optiVal.get() == 1):
+                optiReturn = optimize()
+                output = output + parseOutput('opti', optiReturn)
+            if(omniVal.get() == 1):
+                omniReturn = omni()
+                output = output + parseOutput('omni', omniReturn)
+        except:
+            messagebox.showinfo("Error", "Syntax error(s), please check input and try again.")
 def printOutput(output):
     newWindow = tk.Toplevel(window)
     newWindow.title("Results")
