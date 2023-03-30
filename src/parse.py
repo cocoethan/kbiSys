@@ -67,9 +67,10 @@ def parseOutput(type, data):
             string = string + '\n'
 
     if (type == 'exem'):
-        print()
+        string = "\nExemplification:\n" + str(data) + '\n'
+
     if (type == 'opti'):
-        print()
+        print("parseOutput Called:",data)
     if (type == 'omni'):
-        print()
+        print("parseOutput Called:",data)
     return string
