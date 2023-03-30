@@ -65,12 +65,45 @@ def parseOutput(type, data):
             for j, vals in enumerate(tempArr):
                 string = string + " " + tempArr[j]
             string = string + '\n'
+        string = string + '\n'
 
     if (type == 'exem'):
-        string = "\nExemplification:\n" + str(data) + '\n'
+        string = "Exemplification:\n" + str(data) + '\n'
+        string = string + '\n'
 
     if (type == 'opti'):
-        print("parseOutput Called:",data)
+        string = "Optimal:\n"
+        print("DATAAAA:",data)
+        for i, val in enumerate(data):
+            if(i == 0):
+                print("TEST:", data[0][0], data[0][1])
+                string = string + "Penalty Optimal:\n" + data[0][0] + " with " + data[0][1] + " penalty.\n\n"
+            elif(i == 1):
+                print("TEST:",data[1][0],data[1][1])
+                string = string + "Possibilistic Optimal:\n" + data[1][0] + " with " + data[1][1] + " tolerance.\n\n"
+            elif(i == 2):
+                print("TEST:",data[2][0])
+                string = string + "Choice Optimal:\n" + data[2][0] + "\n"
+        string = string + '\n'
+
     if (type == 'omni'):
-        print("parseOutput Called:",data)
+        string = "Omni-Optimal:\n"
+        for i, val in enumerate(data):
+            if (i == 0):
+                print("TEST:", data[0][0], data[0][1])
+                string = string + "Penalty Optimal:\n" + data[0][0] + " with " + data[0][1] + " penalty.\n\n"
+            elif (i == 1):
+                print("TEST:", data[1][0], data[1][1])
+                string = string + "Possibilistic Optimal:\n" + data[1][0] + " with " + data[1][1] + " tolerance.\n\n"
+            elif (i == 2):
+                tempArr = data[2]
+                print(len(tempArr))
+                string = string + "Qualitative Optimal:\n"
+                for j, vals in enumerate(tempArr):
+                    if(j == (int(len(tempArr)) - 1)):
+                       string = string + str(tempArr[j])
+                    else:
+                        string = string + str(tempArr[j]) + ", "
+        string = string + '\n'
+
     return string
