@@ -2,14 +2,15 @@ import random
 from numpy import binary_repr
 
 objects = {}
-attrValsDict = {} #Dictionary for only attribute values
+attrValsDict = {}  # Dictionary for only attribute values
 feasible = {}
 
-attrDict = {} #Dicitionary for attributes and values
-hardDict = {} #Dictionary for hard constraints
-penDict = {} #Dicitonary for penalty logic
-possDict = {} #Dictionary for possibility logic
-quaDict = {} #Dicitonary for qualitative choice logic
+attrDict = {}  # Dicitionary for attributes and values
+hardDict = {}  # Dictionary for hard constraints
+penDict = {}  # Dicitonary for penalty logic
+possDict = {}  # Dictionary for possibility logic
+quaDict = {}  # Dicitonary for qualitative choice logic
+
 
 def fillDicts(attrDictTemp, hardDictTemp, penDictTemp, possDictTemp, quaDictTemp):
     global attrDict
@@ -31,28 +32,30 @@ def fillDicts(attrDictTemp, hardDictTemp, penDictTemp, possDictTemp, quaDictTemp
 
     for i, key in enumerate(attrDict):
         attrValsDict[i] = attrDict[key]
-    #print("attrValsDict", attrValsDict)
+    # print("attrValsDict", attrValsDict)
 
-    #return
+    # return
     genObjects(i + 1)
+
 
 def genObjects(numOfAtts):
     global objects
     global attrValsDict
     loopcnt = (2 ** numOfAtts)
     for i in range(loopcnt):
-        tempList = list(binary_repr(i, numOfAtts))#
+        tempList = list(binary_repr(i, numOfAtts))  #
         valList = list(range(numOfAtts))
         for j in range(numOfAtts):
             tempArr = attrValsDict[(numOfAtts - (j + 1))]
-            if(tempList[(numOfAtts - (j + 1))] == '0'):
+            if (tempList[(numOfAtts - (j + 1))] == '0'):
                 valList[j] = tempArr[1]
-            elif(tempList[(numOfAtts - (j + 1))] == '1'):
+            elif (tempList[(numOfAtts - (j + 1))] == '1'):
                 valList[j] = tempArr[0]
         keyStr = 'o' + str(i)
         objects[keyStr] = valList
-    #print(objects)
-    #return objects
+    # print(objects)
+    # return objects
+
 
 def existence():
     global attrDict
@@ -92,12 +95,13 @@ def existence():
             flag = 1
 
         if succ == 0:
-            feasible['o'+str(key)] = items
+            feasible['o' + str(key)] = items
         flag = 1
         succ = 0
 
     print(feasible)
     return feasible
+
 
 # pick 2 rand feas and show preference (no clue wtf strict equivalent or incomp means)
 def exemplify():
@@ -114,73 +118,79 @@ def exemplify():
     num1 = 0
     num2 = 0
     while num1 == num2:
-        num1 = random.randint(0, (len(feasible)-1))
-        num2 = random.randint(0, (len(feasible)-1))
+        num1 = random.randint(0, (len(feasible) - 1))
+        num2 = random.randint(0, (len(feasible) - 1))
 
-    #print(num1, num2)
+    # print(num1, num2)
 
     tempList = list(feasible.items())  # convert the view object to a list
     obj1 = tempList[num1][0]
     obj2 = tempList[num2][0]
-    #print(obj1, obj2)
-    
+
     # 0 for obj1 is preferred 1 for obj2 is preferred, -1 for tie
     penPref = 0
     possPref = 0
     quaPref = 0
-    
+
     obj1Pen = penOutDict[obj1]
     obj2Pen = penOutDict[obj2]
     obj1Poss = possOutDict[obj1]
     obj2Poss = possOutDict[obj2]
     obj1Qua = quaOutDict[obj1]
     obj2Qua = quaOutDict[obj2]
-    
-    #checking for penalty preference
+
+    returnStr = ""
+
+    # checking for penalty preference
     if obj1Pen > obj2Pen:
         penPref = 1
     elif obj1Pen == obj2Pen:
         penPref = -1
-    
+
     # checking for poss preference
     if obj1Poss < obj2Poss:
         possPref = 1
     elif obj1Poss == obj2Poss:
         possPref = -1
-    
-    #checking for choice preference
+
+    # checking for choice preference
     if obj1Qua > obj2Qua:
         quaPref = 1
     elif obj1Qua == obj2Qua:
         quaPref = -1
-    
-    #print(penPref, possPref, quaPref)
-    
-    #equivalent: equal in all
+
+    # print(penPref, possPref, quaPref)
+    returnStr = "Using objects " + str(obj1) + " and " + str(obj2) + ":\n"
+    # equivalent: equal in all
     if penPref == -1 and possPref == -1 and quaPref == -1:
-        print("Object", obj1, "and", obj2, "are equivalent")
-        return
-    
-    #strictly preferred: better in all conditions
+        returnStr = returnStr + "Object " + str(obj1) + " and " + str(obj2) + " are equivalent."
+        return returnStr
+
+    # strictly preferred: better in all conditions
     if penPref == 1 and possPref == 1 and quaPref == 1:
-        print("Object", obj2, "is strictly preferred over", obj1)
-        return
-    
+        returnStr = returnStr + "Object " + str(obj2) + " is strictly preferred over " + str(obj1) + "."
+        return returnStr
+
     if penPref == 0 and possPref == 0 and quaPref == 0:
+        returnStr = returnStr + "Object " + str(obj1) + " is strictly preferred over " + str(obj2) + "."
         print("Object", obj1, "is strictly preferred over", obj2)
-        return
-    
-    #weakly preferred: better in 1 condition & as good as in all other
-    if (penPref == 0 and possPref == -1 and quaPref == -1) or (penPref == -1 and possPref == 0 and quaPref == -1) or (penPref == -1 and possPref == -1 and quaPref == 0):
-        print("Object", obj1, "is weakly preferred over", obj2)
-        return
-    if (penPref == 1 and possPref == -1 and quaPref == -1) or (penPref == -1 and possPref == 1 and quaPref == -1) or (penPref == -1 and possPref == -1 and quaPref == 1):
-        print("Object", obj2, "is weakly preferred over", obj1)
-        return
-    
-    #incomp: catchall
-    print("Objects", obj1, "and", obj2, "are incomparable")
-    
+        return returnStr
+
+    # weakly preferred: better in 1 condition & as good as in all other
+    if (penPref == 0 and possPref == -1 and quaPref == -1) or (penPref == -1 and possPref == 0 and quaPref == -1) or (
+            penPref == -1 and possPref == -1 and quaPref == 0):
+        returnStr = returnStr + "Object " + str(obj1) + " is weakly preferred over " + str(obj2) + "."
+        return returnStr
+    if (penPref == 1 and possPref == -1 and quaPref == -1) or (penPref == -1 and possPref == 1 and quaPref == -1) or (
+            penPref == -1 and possPref == -1 and quaPref == 1):
+        returnStr = returnStr + "Object " + str(obj2) + " is weakly preferred over " + str(obj1) + "."
+        return returnStr
+
+    # incomp: catchall
+    returnStr = returnStr + "Objects " + str(obj1) + " and " + str(obj2) + " are incomparable."
+    return returnStr
+
+
 # this should call penalty, possibilistic, qualitative, find one optimal value (if there is a tie, just pick one,
 # and return the object, penalty, and choice
 def optimize():
@@ -215,13 +225,14 @@ def optimize():
     for i in quaOutDict:
         if quaOutDict[i] == minQua:
             minQuaKey.append(i)
-    
+
     print("Optimal Penalty key:")
     print(minPenKey[0])
     print("Optimal Possibility key:")
     print(maxPossKey[0])
     print("Optimal Qualitative Choice:")
     print(minQuaKey[0])
+
 
 # this should call penalty, possibilistic, qualitative, find all optimal values (if there is a tie, return those
 def omni():
@@ -263,6 +274,7 @@ def omni():
     print(*maxPossKey)
     print("OMNI Qualitative Choice:")
     print(*minQuaKey)
+
 
 def penalty():
     global attrDict
@@ -330,6 +342,7 @@ def penalty():
     print(outDict)
     return outDict
 
+
 def possibilistic():
     global attrDict
     global possDict
@@ -389,7 +402,7 @@ def possibilistic():
                     if values[1] < possibilistic:
                         possibilistic = values[1]
                     break
-        #print("possibilistic", round(possibilistic, 1))
+        # print("possibilistic", round(possibilistic, 1))
         outDict[index] = str(round(possibilistic, 1))
         possibilistic = 1
         flag = 0
@@ -397,6 +410,7 @@ def possibilistic():
     # FOR ETHAN PRINT THIS DICTIONARY
     print(outDict)
     return outDict
+
 
 def qualitative():
     global quaDict
@@ -473,14 +487,14 @@ def qualitative():
                         currWord = quals[i]
                         tempList.append(quals[i])
                 quals = tempList
-                #quaRules.append(tempList)
+                # quaRules.append(tempList)
             for i in quaList[id]:
                 if isinstance(quals, list):
                     for j in quals:
                         i.append(j)
                 else:
                     i.append(quals)
-    #print(quaList)
+    # print(quaList)
     flag = 0
     num = 0
     for id, feas in enumerate(feasible.values()):
@@ -501,7 +515,7 @@ def qualitative():
                             flag = 1
                             break
                 if flag == 0:
-                    num = index+1
+                    num = index + 1
                     break
                 orflag = 0
                 flag = 0
@@ -518,16 +532,17 @@ def qualitative():
     for tot in finalVals:
         for num in tot:
             sum += num
-            #print(sum)
+            # print(sum)
         quaList.append(sum)
         sum = 0
 
     for id, index in enumerate(feasible):
         quaValsDict[index] = quaList[id]
 
-    #FOR ETHAN so this is a list with all table vals, could print this for qual or to keep uniform could print quaValsDict
+    # FOR ETHAN so this is a list with all table vals, could print this for qual or to keep uniform could print quaValsDict
     print(finalVals)
     return quaValsDict
+
 
 def notForPen(currWord):
     currWord = currWord.replace("NOT ", "")
