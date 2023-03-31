@@ -1,3 +1,0 @@
-steak AND soup, 0.4
-beer AND tea OR mint, 0.6
-pasta OR oyster AND salad, 0.3
