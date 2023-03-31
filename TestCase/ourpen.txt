@@ -1,3 +1,0 @@
-steak AND soup, 4
-beer AND tea OR mint, 6
-pasta OR oyster AND salad, 3
