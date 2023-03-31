@@ -1,11 +1,12 @@
 import tkinter as tk
+import traceback
 from tkinter import filedialog, LEFT, TOP
 from tkinter import scrolledtext
 from tkinter import ttk
 from tkinter import messagebox
 
 from parse import parseInput, parseOutput
-from logic import existence, exemplify, optimize, omni
+from logic import existence, exemplify, optimize, omni, printObjs
 
 #Set-up Window
 window = tk.Tk()
@@ -64,14 +65,17 @@ def generate():
         or quaTxt.compare("end-1c", "==", "1.0")
     ):
         messagebox.showinfo("Error", "One or more entry boxes are empty or null, please try again.")
-    elif(nullCheck == 0):
-        messagebox.showinfo("Error", "No Reasoning Task(s) selected, please select at least one option.")
+    #elif(nullCheck == 0):
+        #messagebox.showinfo("Error", "No Reasoning Task(s) selected, please select at least one option.")
     else:
         output = ""
 
         try:
             parseInput(attrTxt.get('1.0', tk.END), hardTxt.get('1.0', tk.END), penTxt.get('1.0', tk.END),
                possTxt.get('1.0', tk.END), quaTxt.get('1.0', tk.END))
+
+            objReturn = printObjs()
+            output = output + parseOutput('obj', objReturn)
 
             exisReturn = existence()
             if (exisVal.get() == 1):
@@ -86,8 +90,9 @@ def generate():
                 omniReturn = omni()
                 output = output + parseOutput('omni', omniReturn)
             printOutput(output)
-        except:
+        except Exception:
             messagebox.showinfo("Error", "Syntax error(s), please check input and try again.")
+
 def printOutput(output):
     newWindow = tk.Toplevel(window)
     newWindow.title("Results")
@@ -109,49 +114,6 @@ def clear():
     optiVal.set(0)
     omniVal.set(0)
 
-def helpIndex():
-    help = '''
-            Note:
-            'kbiSys' stands for: Knowledge-Based Intelligent System, therefore a basic understand of Knowledge-Based
-            Intelligent Systems is recommended. Intended usage is for Introduction to Artificial Intelligence students 
-            at the University of North Florida or other universities.\n
-            Help:
-            Issue: "Generate button is returning an error or not generating output."
-            If 'Generate' button is returning an error or not generating output, please verify all sections are filled 
-            out and input is formatted using Conjunctional Normal Form (CNF). A working example using CNF is provided 
-            below.
-                Example:
-                    Attributes:                 dissert: cake, ice-cream
-                                                       drink: wine, beer
-                                                       main: fish, beef
-                    Hard Constraints:    NOT wine OR NOT ice-cream
-                    Penalty Logic:          fish AND wine, 10
-                                                       wine OR cake, 6
-                    Possibilistic Logic:   fish AND wine, 0.9
-                                                       wine OR cake, 0.6
-                    Qualitative Logic:    fish BT beef IF
-                                                       ice-cream BT cake IF
-                                                       wine BT beer IF fish
-                                                       beer BT wine IF beef
-            Additionally, check that a Reasoning Task is selected.\n
-            Issue: "I do not understand the Reasoning Tasks and their functionality."
-            The Reasoning Tasks work as follows:
-                Existence of feasible objects: decide whether there are feasible objects w.r.t H, 
-                that is, whether there are models of H that are truth assignments making H true.
-                Exemplification: generate, if possible, two random feasible objects, and show the 
-                preference between the two (strict preference, equivalence, or incomparison) w.r.t T.
-                Optimization: find one optimal object w.r.t T.
-                Omni-optimization: find all optimal objects w.r.t T.\n
-            To submit a potential issue, please submit a New Issue through the GitHub repository.
-           '''
-
-    newHelpWindow = tk.Toplevel(window)
-    newHelpWindow.title("Help")
-    newHelpWindow.resizable(False, False)
-    # newWindow.geometry("200x200")
-    outHelpLabel = tk.Label(newHelpWindow, text = help, justify=LEFT)
-    outHelpLabel.pack(side=TOP, anchor='nw', padx=(0, 50))
-
 def about():
     about = '''
             Developed by Maxwell Twardowski and Ethan Coco.\n
@@ -168,7 +130,6 @@ def about():
     outAboutLabel = tk.Label(newAboutWindow, text=about, justify=LEFT)
     outAboutLabel.pack(side=TOP, anchor='nw', padx=(0,50))
 
-helpMenu.add_command(label="Help Index", command=helpIndex)
 helpMenu.add_command(label="About...", command=about)
 
 #Fill Window
@@ -244,5 +205,27 @@ clrBtn.pack(side='right')
 
 menubar.add_cascade(label="Help", menu=helpMenu)
 window.config(menu=menubar)
+
+#Delete After (For Testing Purposes Only)
+attrTxt.insert(tk.END,
+'''appetizer: salad, soup
+entree: beef, fish
+drink: beer, wine
+dissert: icecream, cake''')
+hardTxt.insert(tk.END,
+'''NOT soup OR cake''')
+penTxt.insert(tk.END,
+'''fish OR salad AND fish OR icecream, 9
+beef OR soup AND beef OR cake, 8
+wine OR cake, 6''')
+possTxt.insert(tk.END,
+'''fish OR salad AND fish OR icecream, 0.9
+beef OR soup AND beef OR cake, 0.8
+wine OR cake, 0.6''')
+quaTxt.insert(tk.END,
+'''wine AND soup BT beer AND salad IF fish
+beer AND salad BT wine AND soup IF beef
+beef BT fish IF
+soup BT salad IF''')
 
 window.mainloop()
