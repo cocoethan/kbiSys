@@ -57,7 +57,7 @@ def parseOutput(type, data):
     string = ""
 
     if(type == 'obj'):
-        string = "Objects:\n"
+        string = "Objects -\n"
         print("OBJS:", data)
         for i, key in enumerate(data):
             tempArr = data[key]
@@ -68,7 +68,7 @@ def parseOutput(type, data):
         string = string + '\n'
 
     if(type == 'exis'):
-        string = "Feasible:\n"
+        string = "Feasible -\n"
         for i, key in enumerate(data):
             print("HERE:", data[key])
             tempArr = data[key]
@@ -79,11 +79,11 @@ def parseOutput(type, data):
         string = string + '\n'
 
     if (type == 'exem'):
-        string = "Exemplification:\n" + str(data) + '\n'
+        string = "Exemplification -\n" + str(data) + '\n'
         string = string + '\n'
 
     if (type == 'opti'):
-        string = "Optimal:\n"
+        string = "Optimal -\n"
         print("DATAAAA:",data)
         for i, val in enumerate(data):
             if(i == 0):
@@ -98,7 +98,7 @@ def parseOutput(type, data):
         string = string + '\n'
 
     if (type == 'omni'):
-        string = "Omni-Optimal:\n"
+        string = "Omni-Optimal -\n"
         for i, val in enumerate(data):
             if (i == 0):
                 tempArr = data[0]
