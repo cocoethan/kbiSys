@@ -90,14 +90,23 @@ def parseOutput(type, data):
         string = "Omni-Optimal:\n"
         for i, val in enumerate(data):
             if (i == 0):
-                print("TEST:", data[0][0], data[0][1])
-                string = string + "Penalty Optimal:\n" + data[0][0] + " with " + data[0][1] + " penalty.\n\n"
+                tempArr = data[0]
+                string = string + "Penalty Optimal:\n"
+                for j, vals in enumerate(tempArr):
+                    if(j % 2 == 0):
+                        string = string + tempArr[j] + " with " + tempArr[j + 1] + " penalty.\n"
+                    else:
+                        pass
             elif (i == 1):
-                print("TEST:", data[1][0], data[1][1])
-                string = string + "Possibilistic Optimal:\n" + data[1][0] + " with " + data[1][1] + " tolerance.\n\n"
+                tempArr = data[1]
+                string = string + "Possibilistic Optimal:\n"
+                for j, vals in enumerate(tempArr):
+                    if (j % 2 == 0):
+                        string = string + tempArr[j] + " with " + tempArr[j + 1] + " tolerance.\n"
+                    else:
+                        pass
             elif (i == 2):
                 tempArr = data[2]
-                print(len(tempArr))
                 string = string + "Qualitative Optimal:\n"
                 for j, vals in enumerate(tempArr):
                     if(j == (int(len(tempArr)) - 1)):
