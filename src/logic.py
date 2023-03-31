@@ -11,7 +11,7 @@ penDict = {}  # Dicitonary for penalty logic
 possDict = {}  # Dictionary for possibility logic
 quaDict = {}  # Dicitonary for qualitative choice logic
 
-
+# filling dictionaries from text files
 def fillDicts(attrDictTemp, hardDictTemp, penDictTemp, possDictTemp, quaDictTemp):
     global attrDict
     global hardDict
@@ -37,7 +37,7 @@ def fillDicts(attrDictTemp, hardDictTemp, penDictTemp, possDictTemp, quaDictTemp
     # return
     genObjects(i + 1)
 
-
+# doing binary encoding
 def genObjects(numOfAtts):
 #    global objects
 #    global attrValsDict
@@ -72,6 +72,7 @@ def printObjs():
     global objects
     return objects
 
+# determines which objects are feasible
 def existence():
     global attrDict
     global hardDict
@@ -114,14 +115,11 @@ def existence():
         flag = 1
         succ = 0
 
-    print(feasible)
+    #print(feasible)
     return feasible
 
-
-# pick 2 rand feas and show preference (no clue wtf strict equivalent or incomp means)
+# picks 2 random feasible objects and shows preference
 def exemplify():
-    # so the thing ab this is we dont need to be calling these fnctns again, but because all options can
-    # be done independently im just going to do it like this for now. can always change if we feel like optimizing
     penOutDict = {}
     possOutDict = {}
     quaOutList = []
@@ -135,8 +133,6 @@ def exemplify():
     while num1 == num2:
         num1 = random.randint(0, (len(feasible) - 1))
         num2 = random.randint(0, (len(feasible) - 1))
-
-    # print(num1, num2)
 
     tempList = list(feasible.items())  # convert the view object to a list
     obj1 = tempList[num1][0]
@@ -179,8 +175,8 @@ def exemplify():
     elif obj1Qua == obj2Qua:
         quaPref = -1
 
-    # print(penPref, possPref, quaPref)
     returnStr = "Using objects " + str(obj1) + " and " + str(obj2) + ":\n"
+
     # equivalent: equal in all
     if penPref == -1 and possPref == -1 and quaPref == -1:
         returnStr = returnStr + "Object " + str(obj1) + " and " + str(obj2) + " are equivalent."
@@ -193,7 +189,6 @@ def exemplify():
 
     if penPref == 0 and possPref == 0 and quaPref == 0:
         returnStr = returnStr + "Object " + str(obj1) + " is strictly preferred over " + str(obj2) + "."
-        print("Object", obj1, "is strictly preferred over", obj2)
         return returnStr
 
     # incomp: catchall
@@ -212,18 +207,12 @@ def optimize():
     possOutDict = possibilistic()
     quaOutList = qualitative()
 
-    print("PEN:",penOutDict,)
-    print("POSS:",possOutDict)
-    print("QUA:", quaOutList)
-
     values = [int(v) for v in penOutDict.values()]
     minPen = min(values)
-    print(minPen)
     minPenKey = []
     for i in penOutDict:
         if int(penOutDict[i]) == minPen:
             minPenKey.append(i)
-    #print(minPenKey)
 
     # this is getting the maximum possibilistic keys (correct)
     values = [float(v) for v in possOutDict.values()]
@@ -234,16 +223,16 @@ def optimize():
         if float(possOutDict[i]) == maxPoss:
             maxPossKey.append(i)
 
-    print("Optimal Penalty key:")
-    print(minPenKey[0], "with", penOutDict[minPenKey[0]], "penalty")
-    print("Optimal Possibility key:")
-    print(maxPossKey[0], "with", possOutDict[maxPossKey[0]], "tolerance")
-    print("Optimal Qualitative Choice:")
-    print(quaOutList[0])
+    #print("Optimal Penalty key:")
+    #print(minPenKey[0], "with", penOutDict[minPenKey[0]], "penalty")
+    #print("Optimal Possibility key:")
+    #print(maxPossKey[0], "with", possOutDict[maxPossKey[0]], "tolerance")
+    #print("Optimal Qualitative Choice:")
+    #print(quaOutList[0])
 
     return [[minPenKey[0], penOutDict[minPenKey[0]]], [maxPossKey[0], possOutDict[maxPossKey[0]]], [quaOutList[0]]]
 
-# this should call penalty, possibilistic, qualitative, find all optimal values (if there is a tie, return those
+# this should call penalty, possibilistic, qualitative, find all optimal values (if there is a tie, return all)
 def omni():
     penOutDict = {}
     possOutDict = {}
@@ -256,11 +245,9 @@ def omni():
     values = [int(v) for v in penOutDict.values()]
     minPen = min(values)
     minPenKey = []
-    print(minPen)
     for i in penOutDict:
         if int(penOutDict[i]) == minPen:
             minPenKey.append(i)
-    # print(minPenKey)
 
     # this is getting the maximum possibilistic keys (correct)
     values = [float(v) for v in possOutDict.values()]
@@ -271,12 +258,12 @@ def omni():
         if float(possOutDict[i]) == maxPoss:
             maxPossKey.append(i)
 
-    print("OMNI Penalty key:")
-    print(*minPenKey)
-    print("OMNI Possibility key:")
-    print(*maxPossKey)
-    print("OMNI Qualitative Choice:")
-    print(*quaOutList)
+    #print("OMNI Penalty key:")
+    #print(*minPenKey)
+    #print("OMNI Possibility key:")
+    #print(*maxPossKey)
+    #print("OMNI Qualitative Choice:")
+    #print(*quaOutList)
 
     penOut = []
     possOut = []
@@ -285,16 +272,14 @@ def omni():
     for keyVal in minPenKey:
         penOut.append(keyVal)
         penOut.append(penOutDict[keyVal])
-        #print("For omni PEN", penOutDict[keyVal])
 
     for keyVal in maxPossKey:
         possOut.append(keyVal)
         possOut.append(possOutDict[keyVal])
-        #print("For omni POSS", possOutDict[keyVal])
 
-    #print(penOut, possOut, quaOut)
     return [penOut, possOut, quaOutList]
 
+# caluclates total penalty for each object and returns
 def penalty():
     global attrDict
     global penDict
@@ -348,29 +333,23 @@ def penalty():
                         ortrack.append(flag)
             if 1 in ortrack:
                 penalty += int(values[1])
-                #print("currPenORFLAG1:", penalty, "for", feasible[index])
                 ortrack = []
                 continue
-            #print("currPenPASTOR:", penalty, "for", feasible[index])
             # this is for AND
             for condition in values[0]:
                 if isinstance(condition, list):
                     continue
                 if condition not in feasible[index]:
                     penalty += int(values[1])
-                    #print("currPenANDFLAG1:", penalty, "for", feasible[index])
                     break
-                #print("currPenPASTAND:", penalty, "for", feasible[index])
         outDict[index] = str(penalty)
         penalty = 0
         flag = 0
         ortrack = []
 
-    # FOR ETHAN PRINT THIS DICTIONARY
-    #print(outDict)
     return outDict
 
-
+# caluclates total possibilistic for each object and returns
 def possibilistic():
     global attrDict
     global possDict
@@ -380,7 +359,6 @@ def possibilistic():
     outDict = {}
     possList = []
     for index, consts in enumerate(possDict.values()):
-        # print(consts)
         tempList = []
         conjuncts = []
         currPen = consts[0]
@@ -434,17 +412,14 @@ def possibilistic():
                     if values[1] < possibilistic:
                         possibilistic = values[1]
                     break
-        # print("possibilistic", round(possibilistic, 1))
         outDict[index] = str(round(possibilistic, 1))
         possibilistic = 1
         flag = 0
         ortrack = []
 
-    # FOR ETHAN PRINT THIS DICTIONARY
-    #print(outDict)
     return outDict
 
-
+# determines choice preference for each object, finds optimal objects and returns
 def qualitative():
     global quaDict
     global feasible
@@ -572,7 +547,6 @@ def qualitative():
     # if obj1 is weakly preferred over obj2, obj1 dominates obj2
     # obj1 must not be dominated by any other object
 
-    # first, find a list of all objects that are dominated by another object
     for index, obj1 in enumerate(finalVals):
         #print(obj1)
         for id, obj2 in enumerate(finalVals):
@@ -580,7 +554,6 @@ def qualitative():
             # if both objects are eachother, or if obj1 has been dominated
             if index == id or obj1 in dominated:
                 continue
-            #print("obj" + str(index), obj1, "obj" + str(id), obj2)
             for i in range(len(obj1)):
                 if obj1[i] < obj2[i]:
                     weakpref = True
@@ -588,27 +561,23 @@ def qualitative():
                     weakpref = False
                     break
             if weakpref:
-                #print("obj1 weak pref, obj2 dominated")
                 if obj2 not in dominated:
-                    #print("appending", id, obj2)
                     dominated.append(obj2)
 
     finalVals = [val for val in finalVals if val not in dominated]
-    #print(finalVals)
     quaValsList = []
     templist = []
     for id, index in enumerate(predom):
         if index in finalVals:
             templist.append(id)
-        #quaValsDict[index] = quaList[id]
 
     for id, index in enumerate(feasible.keys()):
         if id in templist:
             quaValsList.append(index)
-    #print(quaValsList)
+
     return quaValsList
 
-
+# removes not value
 def notForPen(currWord):
     currWord = currWord.replace("NOT ", "")
     for atts in attrDict.values():
