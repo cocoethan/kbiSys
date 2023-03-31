@@ -39,22 +39,34 @@ def fillDicts(attrDictTemp, hardDictTemp, penDictTemp, possDictTemp, quaDictTemp
 
 
 def genObjects(numOfAtts):
+#    global objects
+#    global attrValsDict
+#    loopcnt = (2 ** numOfAtts)
+#    for i in range(loopcnt):
+#        tempList = list(binary_repr(i, numOfAtts))  #
+#        valList = list(range(numOfAtts))
+#        for j in range(numOfAtts):
+#            tempArr = attrValsDict[(numOfAtts - (j + 1))]
+#            if (tempList[(numOfAtts - (j + 1))] == '0'):
+#                valList[j] = tempArr[1]
+#            elif (tempList[(numOfAtts - (j + 1))] == '1'):
+#                valList[j] = tempArr[0]
+#        keyStr = 'o' + str(i)
+#        objects[keyStr] = valList
     global objects
     global attrValsDict
     loopcnt = (2 ** numOfAtts)
     for i in range(loopcnt):
-        tempList = list(binary_repr(i, numOfAtts))  #
+        tempList = list(binary_repr(i, numOfAtts))
         valList = list(range(numOfAtts))
         for j in range(numOfAtts):
-            tempArr = attrValsDict[(numOfAtts - (j + 1))]
-            if (tempList[(numOfAtts - (j + 1))] == '0'):
-                valList[j] = tempArr[1]
-            elif (tempList[(numOfAtts - (j + 1))] == '1'):
-                valList[j] = tempArr[0]
+            tempArr = attrValsDict[j]
+            if (tempList[j] == '0'):
+                valList[j] = tempArr[0] #Change these to change order
+            elif (tempList[j] == '1'):
+                valList[j] = tempArr[1] #Change these to change order
         keyStr = 'o' + str(i)
         objects[keyStr] = valList
-    # print(objects)
-    # return objects
 
 
 def existence():
