@@ -97,9 +97,12 @@ def printOutput(output):
     newWindow = tk.Toplevel(window)
     newWindow.title("Results")
     newWindow.resizable(False, False)
-    #newWindow.geometry("200x200")
-    outLabel = tk.Label(newWindow, text = output, justify= LEFT)
-    outLabel.pack(side = TOP, anchor='nw', padx=(0, 100))
+    newWindow.geometry("500x500")
+    #outLabel = tk.Label(newWindow, text = output, justify= LEFT)
+    outTxt = scrolledtext.ScrolledText(newWindow, wrap=tk.WORD, width = 500, height = 500)
+    outTxt.delete('1.0', tk.END)
+    outTxt.insert(tk.END, output)
+    outTxt.pack(side = TOP, anchor='nw')
     #print("OUTPUT:", output)
 
 #Clear all entry elements when Clear button is pressed
@@ -205,27 +208,5 @@ clrBtn.pack(side='right')
 
 menubar.add_cascade(label="Help", menu=helpMenu)
 window.config(menu=menubar)
-
-#Delete After (For Testing Purposes Only)
-attrTxt.insert(tk.END,
-'''appetizer: salad, soup
-entree: beef, fish
-drink: beer, wine
-dissert: icecream, cake''')
-hardTxt.insert(tk.END,
-'''NOT soup OR cake''')
-penTxt.insert(tk.END,
-'''fish OR salad AND fish OR icecream, 9
-beef OR soup AND beef OR cake, 8
-wine OR cake, 6''')
-possTxt.insert(tk.END,
-'''fish OR salad AND fish OR icecream, 0.9
-beef OR soup AND beef OR cake, 0.8
-wine OR cake, 0.6''')
-quaTxt.insert(tk.END,
-'''wine AND soup BT beer AND salad IF fish
-beer AND salad BT wine AND soup IF beef
-beef BT fish IF
-soup BT salad IF''')
 
 window.mainloop()
