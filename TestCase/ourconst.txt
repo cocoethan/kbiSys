@@ -1,6 +1,0 @@
-NOT cake OR tea
-soup OR steak
-mint OR NOT scallop
-pizza OR oyster
-wine OR NOT salad
-steak OR scallop
