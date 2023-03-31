@@ -204,28 +204,32 @@ def optimize():
 
     print(penOutDict, possOutDict, quaOutDict)
 
-    # this is getting the minimum penalty key(s) (correct)
-    minPen = min(penOutDict.values())
+    values = [int(v) for v in penOutDict.values()]
+    minPen = min(values)
     minPenKey = []
-
+    print(minPen)
     for i in penOutDict:
-        if penOutDict[i] == minPen:
+        if int(penOutDict[i]) == minPen:
             minPenKey.append(i)
+    #print(minPenKey)
 
     # this is getting the maximum possibilistic keys (correct)
-    maxPoss = max(possOutDict.values())
+    values = [float(v) for v in possOutDict.values()]
+    maxPoss = max(values)
     maxPossKey = []
 
     for i in possOutDict:
-        if possOutDict[i] == maxPoss:
+        if float(possOutDict[i]) == maxPoss:
             maxPossKey.append(i)
 
     # this is getting the minimum qualitative choice keys (i think this is correct??????)
     minQua = min(quaOutDict.values())
+    values = [int(v) for v in quaOutDict.values()]
+    minQua = min(values)
     minQuaKey = []
 
     for i in quaOutDict:
-        if quaOutDict[i] == minQua:
+        if int(quaOutDict[i]) == minQua:
             minQuaKey.append(i)
 
     print("Optimal Penalty key:")
@@ -247,28 +251,32 @@ def omni():
     possOutDict = possibilistic()
     quaOutDict = qualitative()
 
-    # this is getting the minimum penalty key(s) (correct)
-    minPen = min(penOutDict.values())
+    values = [int(v) for v in penOutDict.values()]
+    minPen = min(values)
     minPenKey = []
-
+    print(minPen)
     for i in penOutDict:
-        if penOutDict[i] == minPen:
+        if int(penOutDict[i]) == minPen:
             minPenKey.append(i)
+    # print(minPenKey)
 
-    # this is getting the maximum possibilistic keys (i dont know if this is correct)
-    maxPoss = max(possOutDict.values())
+    # this is getting the maximum possibilistic keys (correct)
+    values = [float(v) for v in possOutDict.values()]
+    maxPoss = max(values)
     maxPossKey = []
 
     for i in possOutDict:
-        if possOutDict[i] == maxPoss:
+        if float(possOutDict[i]) == maxPoss:
             maxPossKey.append(i)
 
     # this is getting the minimum qualitative choice keys (i think this is correct??????)
     minQua = min(quaOutDict.values())
+    values = [int(v) for v in quaOutDict.values()]
+    minQua = min(values)
     minQuaKey = []
 
     for i in quaOutDict:
-        if quaOutDict[i] == minQua:
+        if int(quaOutDict[i]) == minQua:
             minQuaKey.append(i)
 
     print("OMNI Penalty key:")
@@ -297,7 +305,7 @@ def omni():
         #quaOut.append(quaOutDict[keyVal])
         #print("For omni QUA", quaOutDict[keyVal])
 
-    #print(penOut, possOut, quaOut)
+    print(penOut, possOut, quaOut)
     return [penOut, possOut, quaOut]
 
 def penalty():
