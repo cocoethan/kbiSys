@@ -1,0 +1,8 @@
+appetizer: soup, salad
+first course: steak, fish
+second course: pasta, pizza
+third course: scallop, oyster
+dessert: ice cream, cake
+drink: beer, wine
+dessert drink: coffee, tea
+to go: mint, candy
