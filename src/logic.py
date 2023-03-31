@@ -62,12 +62,15 @@ def genObjects(numOfAtts):
         for j in range(numOfAtts):
             tempArr = attrValsDict[j]
             if (tempList[j] == '0'):
-                valList[j] = tempArr[0] #Change these to change order
+                valList[j] = tempArr[0]
             elif (tempList[j] == '1'):
-                valList[j] = tempArr[1] #Change these to change order
+                valList[j] = tempArr[1]
         keyStr = 'o' + str(i)
         objects[keyStr] = valList
 
+def printObjs():
+    global objects
+    return objects
 
 def existence():
     global attrDict
