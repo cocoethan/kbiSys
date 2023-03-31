@@ -196,15 +196,15 @@ def exemplify():
 def optimize():
     penOutDict = {}
     possOutDict = {}
-    quaOutDict = {}
+    quaOutList = []
 
     penOutDict = penalty()
     possOutDict = possibilistic()
-    quaOutDict = qualitative()
+    quaOutList = qualitative()
 
     print("PEN:",penOutDict,)
     print("POSS:",possOutDict)
-    print("QUA:", quaOutDict)
+    print("QUA:", quaOutList)
 
     values = [int(v) for v in penOutDict.values()]
     minPen = min(values)
@@ -224,34 +224,24 @@ def optimize():
         if float(possOutDict[i]) == maxPoss:
             maxPossKey.append(i)
 
-    # this is getting the minimum qualitative choice keys (i think this is correct??????)
-    minQua = min(quaOutDict.values())
-    values = [int(v) for v in quaOutDict.values()]
-    minQua = min(values)
-    minQuaKey = []
-
-    for i in quaOutDict:
-        if int(quaOutDict[i]) == minQua:
-            minQuaKey.append(i)
-
     print("Optimal Penalty key:")
     print(minPenKey[0], "with", penOutDict[minPenKey[0]], "penalty")
     print("Optimal Possibility key:")
     print(maxPossKey[0], "with", possOutDict[maxPossKey[0]], "tolerance")
     print("Optimal Qualitative Choice:")
-    print(minQuaKey[0])
+    print(quaOutList[0])
 
-    return [[minPenKey[0], penOutDict[minPenKey[0]]], [maxPossKey[0], possOutDict[maxPossKey[0]]], [minQuaKey[0]]]
+    return [[minPenKey[0], penOutDict[minPenKey[0]]], [maxPossKey[0], possOutDict[maxPossKey[0]]], [quaOutList[0]]]
 
 # this should call penalty, possibilistic, qualitative, find all optimal values (if there is a tie, return those
 def omni():
     penOutDict = {}
     possOutDict = {}
-    quaOutDict = {}
+    quaOutList = {}
 
     penOutDict = penalty()
     possOutDict = possibilistic()
-    quaOutDict = qualitative()
+    quaOutList = qualitative()
 
     values = [int(v) for v in penOutDict.values()]
     minPen = min(values)
@@ -271,22 +261,12 @@ def omni():
         if float(possOutDict[i]) == maxPoss:
             maxPossKey.append(i)
 
-    # this is getting the minimum qualitative choice keys (i think this is correct??????)
-    minQua = min(quaOutDict.values())
-    values = [int(v) for v in quaOutDict.values()]
-    minQua = min(values)
-    minQuaKey = []
-
-    for i in quaOutDict:
-        if int(quaOutDict[i]) == minQua:
-            minQuaKey.append(i)
-
     print("OMNI Penalty key:")
     print(*minPenKey)
     print("OMNI Possibility key:")
     print(*maxPossKey)
     print("OMNI Qualitative Choice:")
-    print(*minQuaKey)
+    print(*quaOutList)
 
     penOut = []
     possOut = []
@@ -302,13 +282,8 @@ def omni():
         possOut.append(possOutDict[keyVal])
         #print("For omni POSS", possOutDict[keyVal])
 
-    for keyVal in minQuaKey:
-        quaOut.append(keyVal)
-        #quaOut.append(quaOutDict[keyVal])
-        #print("For omni QUA", quaOutDict[keyVal])
-
     #print(penOut, possOut, quaOut)
-    return [penOut, possOut, quaOut]
+    return [penOut, possOut, quaOutList]
 
 def penalty():
     global attrDict
@@ -574,23 +549,54 @@ def qualitative():
         finalVals.append(quaVals)
         quaVals = []
 
-    sum = 0
-    quaValsDict = {}
-    quaList = []
-    for tot in finalVals:
-        for num in tot:
-            sum += num
-            # print(sum)
-        quaList.append(sum)
-        sum = 0
+    # inf = 999
+    for i in range(len(finalVals)):
+        for j in range(len(finalVals[i])):
+            if finalVals[i][j] == 0:
+                finalVals[i][j] = 999
 
-    for id, index in enumerate(feasible):
-        quaValsDict[index] = quaList[id]
+    predom = finalVals
+    dominated = []
+    weakpref = False
 
-    # FOR ETHAN so this is a list with all table vals, could print this for qual or to keep uniform could print quaValsDict
+    # if obj1 is weakly preferred over obj2, obj1 dominates obj2
+    # obj1 must not be dominated by any other object
+
+    # first, find a list of all objects that are dominated by another object
+    for index, obj1 in enumerate(finalVals):
+        #print(obj1)
+        for id, obj2 in enumerate(finalVals):
+            weakpref = False
+            # if both objects are eachother, or if obj1 has been dominated
+            if index == id or obj1 in dominated:
+                continue
+            print("obj" + str(index), obj1, "obj" + str(id), obj2)
+            for i in range(len(obj1)):
+                if obj1[i] < obj2[i]:
+                    weakpref = True
+                if obj1[i] > obj2[i]:
+                    weakpref = False
+                    break
+            if weakpref:
+                #print("obj1 weak pref, obj2 dominated")
+                if obj2 not in dominated:
+                    #print("appending", id, obj2)
+                    dominated.append(obj2)
+
+    finalVals = [val for val in finalVals if val not in dominated]
     #print(finalVals)
-    #print(quaValsDict)
-    return quaValsDict
+    quaValsList = []
+    templist = []
+    for id, index in enumerate(predom):
+        if index in finalVals:
+            templist.append(id)
+        #quaValsDict[index] = quaList[id]
+
+    for id, index in enumerate(feasible.keys()):
+        if id in templist:
+            quaValsList.append(index)
+    #print(quaValsList)
+    return quaValsList
 
 
 def notForPen(currWord):
