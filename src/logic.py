@@ -109,11 +109,11 @@ def exemplify():
     # be done independently im just going to do it like this for now. can always change if we feel like optimizing
     penOutDict = {}
     possOutDict = {}
-    quaOutDict = {}
+    quaOutList = []
 
     penOutDict = penalty()
     possOutDict = possibilistic()
-    quaOutDict = qualitative()
+    quaOutList = qualitative()
 
     num1 = 0
     num2 = 0
@@ -130,14 +130,19 @@ def exemplify():
     # 0 for obj1 is preferred 1 for obj2 is preferred, -1 for tie
     penPref = 0
     possPref = 0
-    quaPref = 0
+    quaPref = 1
 
     obj1Pen = penOutDict[obj1]
     obj2Pen = penOutDict[obj2]
     obj1Poss = possOutDict[obj1]
     obj2Poss = possOutDict[obj2]
-    obj1Qua = quaOutDict[obj1]
-    obj2Qua = quaOutDict[obj2]
+
+    obj1Qua = 0
+    obj2Qua = 0
+    if obj1 in quaOutList:
+        obj1Qua = 1
+    if obj2 in quaOutList:
+        obj2Qua = 1
 
     returnStr = ""
 
@@ -155,7 +160,7 @@ def exemplify():
 
     # checking for choice preference
     if obj1Qua > obj2Qua:
-        quaPref = 1
+        quaPref = 0
     elif obj1Qua == obj2Qua:
         quaPref = -1
 
@@ -174,16 +179,6 @@ def exemplify():
     if penPref == 0 and possPref == 0 and quaPref == 0:
         returnStr = returnStr + "Object " + str(obj1) + " is strictly preferred over " + str(obj2) + "."
         print("Object", obj1, "is strictly preferred over", obj2)
-        return returnStr
-
-    # weakly preferred: better in 1 condition & as good as in all other
-    if (penPref == 0 and possPref == -1 and quaPref == -1) or (penPref == -1 and possPref == 0 and quaPref == -1) or (
-            penPref == -1 and possPref == -1 and quaPref == 0):
-        returnStr = returnStr + "Object " + str(obj1) + " is weakly preferred over " + str(obj2) + "."
-        return returnStr
-    if (penPref == 1 and possPref == -1 and quaPref == -1) or (penPref == -1 and possPref == 1 and quaPref == -1) or (
-            penPref == -1 and possPref == -1 and quaPref == 1):
-        returnStr = returnStr + "Object " + str(obj2) + " is weakly preferred over " + str(obj1) + "."
         return returnStr
 
     # incomp: catchall
@@ -237,7 +232,7 @@ def optimize():
 def omni():
     penOutDict = {}
     possOutDict = {}
-    quaOutList = {}
+    quaOutList = []
 
     penOutDict = penalty()
     possOutDict = possibilistic()
@@ -322,7 +317,7 @@ def penalty():
     penalty = 0
     flag = 0
     ortrack = []
-    print("PENLIST:", penList)
+    #print("PENLIST:", penList)
     for index in feasible:
         for values in penList:
             # this is for OR
@@ -570,7 +565,7 @@ def qualitative():
             # if both objects are eachother, or if obj1 has been dominated
             if index == id or obj1 in dominated:
                 continue
-            print("obj" + str(index), obj1, "obj" + str(id), obj2)
+            #print("obj" + str(index), obj1, "obj" + str(id), obj2)
             for i in range(len(obj1)):
                 if obj1[i] < obj2[i]:
                     weakpref = True
