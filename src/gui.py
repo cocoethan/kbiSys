@@ -1,5 +1,5 @@
 import tkinter as tk
-import traceback
+#import traceback
 from tkinter import filedialog, LEFT, TOP
 from tkinter import scrolledtext
 from tkinter import ttk
