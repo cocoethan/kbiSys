@@ -16,7 +16,6 @@ def parseInput(attrStr, hardStr, penStr, possStr, quaStr):
             # print(strs)
             strs[1] = strs[1].split(',')
             attrDict[strs[0]] = strs[1]
-    print(attrDict)
     # do binary encoding
 
     # hard constraints dict creation
@@ -24,7 +23,6 @@ def parseInput(attrStr, hardStr, penStr, possStr, quaStr):
     for key, strs in enumerate(hardStr):
         if strs:
             hardDict[key] = strs
-    print(hardDict)
 
     # penalty dict creation (delim on commma)
     penStr = penStr.split('\n')
@@ -33,7 +31,6 @@ def parseInput(attrStr, hardStr, penStr, possStr, quaStr):
             strs = strs.split(",")  # add error checking later
             strs[1] = strs[1].replace(" ", "")
             penDict[key] = strs
-    print(penDict)
 
     # possibilistic dict creation (delim on comma)
     possStr = possStr.split('\n')
@@ -42,14 +39,12 @@ def parseInput(attrStr, hardStr, penStr, possStr, quaStr):
             strs = strs.split(",")  # add error checking later
             strs[1] = strs[1].replace(" ", "")
             possDict[key] = strs
-    print(possDict)
 
     # Qualitative choice logic dict creation
     quaStr = quaStr.split('\n')
     for key, strs in enumerate(quaStr):
         if strs:  # add error checking later
             quaDict[key] = strs
-    print(quaDict)
 
     fillDicts(attrDict, hardDict, penDict, possDict, quaDict)
 
@@ -58,7 +53,6 @@ def parseOutput(type, data):
 
     if(type == 'obj'):
         string = "Objects -\n"
-        print("OBJS:", data)
         for i, key in enumerate(data):
             tempArr = data[key]
             string = string + str(key) + ":"
@@ -70,7 +64,6 @@ def parseOutput(type, data):
     if(type == 'exis'):
         string = "Feasible -\n"
         for i, key in enumerate(data):
-            print("HERE:", data[key])
             tempArr = data[key]
             string = string + str(key) + ":"
             for j, vals in enumerate(tempArr):
@@ -84,16 +77,12 @@ def parseOutput(type, data):
 
     if (type == 'opti'):
         string = "Optimal -\n"
-        print("DATAAAA:",data)
         for i, val in enumerate(data):
             if(i == 0):
-                print("TEST:", data[0][0], data[0][1])
                 string = string + "Penalty Optimal:\n" + data[0][0] + " with " + data[0][1] + " penalty.\n\n"
             elif(i == 1):
-                print("TEST:",data[1][0],data[1][1])
                 string = string + "Possibilistic Optimal:\n" + data[1][0] + " with " + data[1][1] + " tolerance.\n\n"
             elif(i == 2):
-                print("TEST:",data[2][0])
                 string = string + "Choice Optimal:\n" + data[2][0] + "\n"
         string = string + '\n'
 
