@@ -56,6 +56,17 @@ def parseInput(attrStr, hardStr, penStr, possStr, quaStr):
 def parseOutput(type, data):
     string = ""
 
+    if(type == 'obj'):
+        string = "Objects:\n"
+        print("OBJS:", data)
+        for i, key in enumerate(data):
+            tempArr = data[key]
+            string = string + str(key) + ":"
+            for j, vals in enumerate(tempArr):
+                string = string + " " + tempArr[j]
+            string = string + '\n'
+        string = string + '\n'
+
     if(type == 'exis'):
         string = "Feasible:\n"
         for i, key in enumerate(data):
