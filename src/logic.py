@@ -202,12 +202,14 @@ def optimize():
     possOutDict = possibilistic()
     quaOutDict = qualitative()
 
-    print(penOutDict, possOutDict, quaOutDict)
+    print("PEN:",penOutDict,)
+    print("POSS:",possOutDict)
+    print("QUA:", quaOutDict)
 
     values = [int(v) for v in penOutDict.values()]
     minPen = min(values)
-    minPenKey = []
     print(minPen)
+    minPenKey = []
     for i in penOutDict:
         if int(penOutDict[i]) == minPen:
             minPenKey.append(i)
@@ -305,7 +307,7 @@ def omni():
         #quaOut.append(quaOutDict[keyVal])
         #print("For omni QUA", quaOutDict[keyVal])
 
-    print(penOut, possOut, quaOut)
+    #print(penOut, possOut, quaOut)
     return [penOut, possOut, quaOut]
 
 def penalty():
@@ -334,6 +336,7 @@ def penalty():
                             currWord = notForPen(currWord)
                         tempList.append(currWord)
                     conjuncts.append(tempList)
+                    tempList = []
                 else:
                     currWord = currPen[i]
                     if 'NOT' in currWord:
@@ -343,7 +346,8 @@ def penalty():
 
     penalty = 0
     flag = 0
-
+    ortrack = []
+    print("PENLIST:", penList)
     for index in feasible:
         for values in penList:
             # this is for OR
@@ -356,19 +360,26 @@ def penalty():
                                 break
                             else:
                                 flag = 1
-            if flag == 1:
+                        ortrack.append(flag)
+            if 1 in ortrack:
                 penalty += int(values[1])
-                break
+                #print("currPenORFLAG1:", penalty, "for", feasible[index])
+                ortrack = []
+                continue
+            #print("currPenPASTOR:", penalty, "for", feasible[index])
             # this is for AND
             for condition in values[0]:
                 if isinstance(condition, list):
                     continue
                 if condition not in feasible[index]:
                     penalty += int(values[1])
+                    #print("currPenANDFLAG1:", penalty, "for", feasible[index])
                     break
+                #print("currPenPASTAND:", penalty, "for", feasible[index])
         outDict[index] = str(penalty)
         penalty = 0
         flag = 0
+        ortrack = []
 
     # FOR ETHAN PRINT THIS DICTIONARY
     #print(outDict)
@@ -401,6 +412,7 @@ def possibilistic():
                             currWord = notForPen(currWord)
                         tempList.append(currWord)
                     conjuncts.append(tempList)
+                    tempList = []
                 else:
                     currWord = currPen[i]
                     if 'NOT' in currWord:
@@ -410,7 +422,7 @@ def possibilistic():
 
     possibilistic = 1
     flag = 0
-
+    ortrack = []
     for index in feasible:
         for values in possList:
             # this is for OR
@@ -423,9 +435,12 @@ def possibilistic():
                                 break
                             else:
                                 flag = 1
-            if flag == 1:
+                        ortrack.append(flag)
+            if 1 in ortrack:
                 if values[1] < possibilistic:
                     possibilistic = values[1]
+                    ortrack = []
+                    continue
             # this is for AND
             for condition in values[0]:
                 if isinstance(condition, list):
@@ -438,6 +453,7 @@ def possibilistic():
         outDict[index] = str(round(possibilistic, 1))
         possibilistic = 1
         flag = 0
+        ortrack = []
 
     # FOR ETHAN PRINT THIS DICTIONARY
     #print(outDict)
@@ -573,6 +589,7 @@ def qualitative():
 
     # FOR ETHAN so this is a list with all table vals, could print this for qual or to keep uniform could print quaValsDict
     #print(finalVals)
+    #print(quaValsDict)
     return quaValsDict
 
 
